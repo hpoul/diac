@@ -1,4 +1,4 @@
-name: diac
+name: diac_client
 description: |
   Dart InApp Communication: Simple way to communicate changelogs, news,
   CTA to users. (Think cross platform firebase in app messaging)
