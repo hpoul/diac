@@ -1,0 +1,20 @@
+name: diac
+description: |
+  Dart InApp Communication: Simple way to communicate changelogs, news,
+  CTA to users. (Think cross platform firebase in app messaging)
+version: 0.0.1
+author: Herbert Poul <herbert@codeux.design>
+homepage:
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  pedantic: '>=1.7.0'
+
