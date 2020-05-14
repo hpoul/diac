@@ -1,4 +1,4 @@
-# diac
+# diac_client
 
 A new Flutter package project.
 

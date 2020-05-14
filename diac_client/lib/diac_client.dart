@@ -1,4 +1,4 @@
-library diac;
+library diac_client;
 
 /// A Calculator.
 class Calculator {

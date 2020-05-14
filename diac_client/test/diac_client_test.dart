@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:diac/diac.dart';
+import 'package:diac_client/diac_client.dart';
 
 void main() {
   test('adds one to input values', () {
