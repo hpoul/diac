@@ -24,6 +24,7 @@ _$_DiacMessage _$_$_DiacMessageFromJson(Map<String, dynamic> json) {
   return _$_DiacMessage(
     uuid: json['uuid'] as String,
     body: json['body'] as String,
+    sku: json['sku'] as String,
     dateStart: json['dateStart'] == null
         ? null
         : DateTime.parse(json['dateStart'] as String),
@@ -43,6 +44,7 @@ Map<String, dynamic> _$_$_DiacMessageToJson(_$_DiacMessage instance) =>
     <String, dynamic>{
       'uuid': instance.uuid,
       'body': instance.body,
+      'sku': instance.sku,
       'dateStart': instance.dateStart?.toIso8601String(),
       'dateEnd': instance.dateEnd?.toIso8601String(),
       'expression': instance.expression,

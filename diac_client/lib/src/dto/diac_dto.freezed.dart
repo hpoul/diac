@@ -86,7 +86,7 @@ class __$DiacConfigCopyWithImpl<$Res> extends _$DiacConfigCopyWithImpl<$Res>
 }
 
 @JsonSerializable()
-class _$_DiacConfig with DiagnosticableTreeMixin implements _DiacConfig {
+class _$_DiacConfig implements _DiacConfig {
   const _$_DiacConfig({@required this.messages}) : assert(messages != null);
 
   factory _$_DiacConfig.fromJson(Map<String, dynamic> json) =>
@@ -96,16 +96,8 @@ class _$_DiacConfig with DiagnosticableTreeMixin implements _DiacConfig {
   final List<DiacMessage> messages;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'DiacConfig(messages: $messages)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'DiacConfig'))
-      ..add(DiagnosticsProperty('messages', messages));
   }
 
   @override
@@ -154,13 +146,15 @@ class _$DiacMessageTearOff {
   _DiacMessage call(
       {@required String uuid,
       @required String body,
+      @required String sku,
       DateTime dateStart,
       DateTime dateEnd,
       String expression,
-      List<DiacMessageAction> actions}) {
+      @required List<DiacMessageAction> actions}) {
     return _DiacMessage(
       uuid: uuid,
       body: body,
+      sku: sku,
       dateStart: dateStart,
       dateEnd: dateEnd,
       expression: expression,
@@ -175,6 +169,7 @@ const $DiacMessage = _$DiacMessageTearOff();
 mixin _$DiacMessage {
   String get uuid;
   String get body;
+  String get sku;
   DateTime get dateStart;
   DateTime get dateEnd;
   String get expression;
@@ -191,6 +186,7 @@ abstract class $DiacMessageCopyWith<$Res> {
   $Res call(
       {String uuid,
       String body,
+      String sku,
       DateTime dateStart,
       DateTime dateEnd,
       String expression,
@@ -208,6 +204,7 @@ class _$DiacMessageCopyWithImpl<$Res> implements $DiacMessageCopyWith<$Res> {
   $Res call({
     Object uuid = freezed,
     Object body = freezed,
+    Object sku = freezed,
     Object dateStart = freezed,
     Object dateEnd = freezed,
     Object expression = freezed,
@@ -216,6 +213,7 @@ class _$DiacMessageCopyWithImpl<$Res> implements $DiacMessageCopyWith<$Res> {
     return _then(_value.copyWith(
       uuid: uuid == freezed ? _value.uuid : uuid as String,
       body: body == freezed ? _value.body : body as String,
+      sku: sku == freezed ? _value.sku : sku as String,
       dateStart:
           dateStart == freezed ? _value.dateStart : dateStart as DateTime,
       dateEnd: dateEnd == freezed ? _value.dateEnd : dateEnd as DateTime,
@@ -237,6 +235,7 @@ abstract class _$DiacMessageCopyWith<$Res>
   $Res call(
       {String uuid,
       String body,
+      String sku,
       DateTime dateStart,
       DateTime dateEnd,
       String expression,
@@ -256,6 +255,7 @@ class __$DiacMessageCopyWithImpl<$Res> extends _$DiacMessageCopyWithImpl<$Res>
   $Res call({
     Object uuid = freezed,
     Object body = freezed,
+    Object sku = freezed,
     Object dateStart = freezed,
     Object dateEnd = freezed,
     Object expression = freezed,
@@ -264,6 +264,7 @@ class __$DiacMessageCopyWithImpl<$Res> extends _$DiacMessageCopyWithImpl<$Res>
     return _then(_DiacMessage(
       uuid: uuid == freezed ? _value.uuid : uuid as String,
       body: body == freezed ? _value.body : body as String,
+      sku: sku == freezed ? _value.sku : sku as String,
       dateStart:
           dateStart == freezed ? _value.dateStart : dateStart as DateTime,
       dateEnd: dateEnd == freezed ? _value.dateEnd : dateEnd as DateTime,
@@ -277,16 +278,19 @@ class __$DiacMessageCopyWithImpl<$Res> extends _$DiacMessageCopyWithImpl<$Res>
 }
 
 @JsonSerializable()
-class _$_DiacMessage with DiagnosticableTreeMixin implements _DiacMessage {
+class _$_DiacMessage implements _DiacMessage {
   const _$_DiacMessage(
       {@required this.uuid,
       @required this.body,
+      @required this.sku,
       this.dateStart,
       this.dateEnd,
       this.expression,
-      this.actions})
+      @required this.actions})
       : assert(uuid != null),
-        assert(body != null);
+        assert(body != null),
+        assert(sku != null),
+        assert(actions != null);
 
   factory _$_DiacMessage.fromJson(Map<String, dynamic> json) =>
       _$_$_DiacMessageFromJson(json);
@@ -295,6 +299,8 @@ class _$_DiacMessage with DiagnosticableTreeMixin implements _DiacMessage {
   final String uuid;
   @override
   final String body;
+  @override
+  final String sku;
   @override
   final DateTime dateStart;
   @override
@@ -305,21 +311,8 @@ class _$_DiacMessage with DiagnosticableTreeMixin implements _DiacMessage {
   final List<DiacMessageAction> actions;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'DiacMessage(uuid: $uuid, body: $body, dateStart: $dateStart, dateEnd: $dateEnd, expression: $expression, actions: $actions)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'DiacMessage'))
-      ..add(DiagnosticsProperty('uuid', uuid))
-      ..add(DiagnosticsProperty('body', body))
-      ..add(DiagnosticsProperty('dateStart', dateStart))
-      ..add(DiagnosticsProperty('dateEnd', dateEnd))
-      ..add(DiagnosticsProperty('expression', expression))
-      ..add(DiagnosticsProperty('actions', actions));
+  String toString() {
+    return 'DiacMessage(uuid: $uuid, body: $body, sku: $sku, dateStart: $dateStart, dateEnd: $dateEnd, expression: $expression, actions: $actions)';
   }
 
   @override
@@ -330,6 +323,8 @@ class _$_DiacMessage with DiagnosticableTreeMixin implements _DiacMessage {
                 const DeepCollectionEquality().equals(other.uuid, uuid)) &&
             (identical(other.body, body) ||
                 const DeepCollectionEquality().equals(other.body, body)) &&
+            (identical(other.sku, sku) ||
+                const DeepCollectionEquality().equals(other.sku, sku)) &&
             (identical(other.dateStart, dateStart) ||
                 const DeepCollectionEquality()
                     .equals(other.dateStart, dateStart)) &&
@@ -348,6 +343,7 @@ class _$_DiacMessage with DiagnosticableTreeMixin implements _DiacMessage {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(uuid) ^
       const DeepCollectionEquality().hash(body) ^
+      const DeepCollectionEquality().hash(sku) ^
       const DeepCollectionEquality().hash(dateStart) ^
       const DeepCollectionEquality().hash(dateEnd) ^
       const DeepCollectionEquality().hash(expression) ^
@@ -367,10 +363,11 @@ abstract class _DiacMessage implements DiacMessage {
   const factory _DiacMessage(
       {@required String uuid,
       @required String body,
+      @required String sku,
       DateTime dateStart,
       DateTime dateEnd,
       String expression,
-      List<DiacMessageAction> actions}) = _$_DiacMessage;
+      @required List<DiacMessageAction> actions}) = _$_DiacMessage;
 
   factory _DiacMessage.fromJson(Map<String, dynamic> json) =
       _$_DiacMessage.fromJson;
@@ -379,6 +376,8 @@ abstract class _DiacMessage implements DiacMessage {
   String get uuid;
   @override
   String get body;
+  @override
+  String get sku;
   @override
   DateTime get dateStart;
   @override
@@ -476,9 +475,7 @@ class __$DiacMessageActionCopyWithImpl<$Res>
 }
 
 @JsonSerializable()
-class _$_DiacMessageAction
-    with DiagnosticableTreeMixin
-    implements _DiacMessageAction {
+class _$_DiacMessageAction implements _DiacMessageAction {
   const _$_DiacMessageAction({@required this.label, this.url})
       : assert(label != null);
 
@@ -491,17 +488,8 @@ class _$_DiacMessageAction
   final String url;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString() {
     return 'DiacMessageAction(label: $label, url: $url)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'DiacMessageAction'))
-      ..add(DiagnosticsProperty('label', label))
-      ..add(DiagnosticsProperty('url', url));
   }
 
   @override

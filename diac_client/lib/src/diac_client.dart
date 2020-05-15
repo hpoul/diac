@@ -12,7 +12,22 @@ import 'package:simple_json_persistence/simple_json_persistence.dart';
 final _logger = Logger('diac_client');
 
 class DiacClient {
-  DiacClient(this.endpointUrl) {
+  ///
+  /// [initialConfig]: initial config used before first http request,
+  /// or if config fetching is disabled.
+  DiacClient(
+    this.endpointUrl, {
+    DiacConfig initialConfig,
+    this.disableConfigFetch = false,
+  }) : store = SimpleJsonPersistence.getForTypeSync(
+          (data) => DiacData.fromJson(data),
+          defaultCreator: () => DiacData(
+            firstLaunch: clock.now().toUtc(),
+            seen: [],
+            lastConfig: initialConfig,
+            lastConfigFetchedAt: DateTime.fromMicrosecondsSinceEpoch(0).toUtc(),
+          ),
+        ) {
     store.onValueChanged.listen((event) async {
       if (event.lastConfig == null || event.lastConfigFetchedAt == null) {
         _logger.fine('Never fetched configure before, reloading');
@@ -29,11 +44,13 @@ class DiacClient {
   }
 
   Client _client;
+
+  /// Do not fetch configuration. This can be useful if you want to allow
+  /// users to opt out of in app communications.
+  bool disableConfigFetch;
+
   final String endpointUrl;
-  final store = SimpleJsonPersistence.getForTypeSync(
-      (data) => DiacData.fromJson(data),
-      defaultCreator: () =>
-          DiacData(firstLaunch: clock.now().toUtc(), seen: []));
+  final SimpleJsonPersistence<DiacData> store;
 
   Future<Uri> _uri(List<String> path,
       {Map<String, String> queryParameters}) async {
@@ -49,18 +66,28 @@ class DiacClient {
   }
 
   Future<DiacConfig> _fetchConfig() async {
-    final uri = _uri(['messages.json']);
-    _client ??= Client();
-    final response = await _client.get(uri);
-    final type = response.statusCode ~/ 100;
-    if (type != 2) {
-      _logger.fine('Error while loading diac config. ${response.statusCode}'
-          ' - ${response.body}');
+    if (disableConfigFetch) {
+      _logger.finer('iac message fetching disabled.');
       return null;
     }
-    return DiacConfig.fromJson(
-      json.decode(response.body) as Map<String, dynamic>,
-    );
+    final uri = _uri(['messages.json']);
+    try {
+      _client ??= Client();
+      final response = await _client.get(uri);
+      final type = response.statusCode ~/ 100;
+      if (type != 2) {
+        _logger.fine('Error while loading diac config. ${response.statusCode}'
+            ' - ${response.body}');
+        return null;
+      }
+      return DiacConfig.fromJson(
+        json.decode(response.body) as Map<String, dynamic>,
+      );
+    } catch (e, stackTrace) {
+      _logger.warning(
+          'Error while fetching configuration from $uri', e, stackTrace);
+      rethrow;
+    }
   }
 
   Future<void> _reloadConfigFromServerFuture;

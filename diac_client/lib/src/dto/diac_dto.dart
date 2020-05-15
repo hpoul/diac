@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'diac_dto.g.dart';
@@ -19,10 +18,11 @@ abstract class DiacMessage with _$DiacMessage {
   const factory DiacMessage({
     @required String uuid,
     @required String body,
+    @required String sku,
     DateTime dateStart,
     DateTime dateEnd,
     String expression,
-    List<DiacMessageAction> actions,
+    @required List<DiacMessageAction> actions,
   }) = _DiacMessage;
 
   factory DiacMessage.fromJson(Map<String, dynamic> json) =>

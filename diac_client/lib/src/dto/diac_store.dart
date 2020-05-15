@@ -12,7 +12,7 @@ abstract class DiacData with _$DiacData implements HasToJson {
   const factory DiacData({
     @required DateTime firstLaunch,
     @required List<DiacHistory> seen,
-    DateTime lastConfigFetchedAt,
+    @required DateTime lastConfigFetchedAt,
     DiacConfig lastConfig,
   }) = _DiacData;
 

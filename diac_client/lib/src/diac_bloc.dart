@@ -153,5 +153,5 @@ extension DiacBlocExt on DiacBloc {
 
 extension on DateTime {
   bool isInRange(DateTime start, DateTime end) =>
-      isAfter(start) && isBefore(end);
+      (start == null || isAfter(start)) && (end == null || isBefore(end));
 }

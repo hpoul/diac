@@ -18,6 +18,7 @@ dependencies:
   flutter_async_utils: ">=0.0.1 <1.0.0"
   rxdart: ">=0.24.0 <1.0.0"
   expressions: ">=0.1.5 <1.0.0"
+  uuid: ">=2.0.0 <3.0.0"
 
   ######################
   #### plugin dependencies (with native code)
