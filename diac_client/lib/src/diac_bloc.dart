@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:clock/clock.dart';
 import 'package:diac_client/src/diac_client.dart';
-import 'package:diac_client/src/dto/diac_store.dart';
 import 'package:diac_client/src/dto/diac_dto.dart';
+import 'package:diac_client/src/dto/diac_store.dart';
 import 'package:expressions/expressions.dart';
 import 'package:flutter_async_utils/flutter_async_utils.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
-import 'package:package_info/package_info.dart';
 import 'package:rxdart/rxdart.dart';
 
 final _logger = Logger('diac_bloc');
@@ -125,30 +124,35 @@ class DiacBloc with StreamSubscriberBase {
     Set<String> seenMessages,
     Map<String, Object> context,
   ) async {
-    final now = clock.now();
-    _logger.finest('Find next message. ${data.lastConfig.messages}');
-    for (final message in data.lastConfig.messages) {
-      if (seenMessages.contains(message.uuid)) {
-        _logger.finest('message was already seen ${message.uuid}');
-        continue;
-      }
-      if (!now.isInRange(message.dateStart, message.dateEnd)) {
-        continue;
-      }
-      if (message.expression != null) {
-        final expr = Expression.parse(message.expression);
-        const evaluator = ExpressionEvaluator();
-        final dynamic result = evaluator.eval(
-          expr,
-          await _createExpressionContext(data, context),
-        );
-        _logger.finest('Evaluated expression ${message.expression} '
-            'with $context: $result');
-        if (result is bool && !result) {
+    try {
+      final now = clock.now();
+      _logger.finest('Find next message. ${data.lastConfig.messages}');
+      for (final message in data.lastConfig.messages) {
+        if (seenMessages.contains(message.uuid)) {
+          _logger.finest('message was already seen ${message.uuid}');
           continue;
         }
+        if (!now.isInRange(message.dateStart, message.dateEnd)) {
+          continue;
+        }
+        if (message.expression != null) {
+          final expr = Expression.parse(message.expression);
+          const evaluator = ExpressionEvaluator();
+          final dynamic result = evaluator.eval(
+            expr,
+            await _createExpressionContext(data, context),
+          );
+          _logger.finest('Evaluated expression ${message.expression} '
+              'with $context: $result');
+          if (result is bool && !result) {
+            continue;
+          }
+        }
+        return message;
       }
-      return message;
+    } catch (e, stackTrace) {
+      _logger.severe('Error while finding next message', e, stackTrace);
+      rethrow;
     }
 //    data.seen
     return null;
@@ -159,7 +163,7 @@ class DiacBloc with StreamSubscriberBase {
     assert(data != null);
     assert(context != null);
     final days = data.firstLaunch.difference(clock.now()).abs().inDays;
-    final pi = await PackageInfo.fromPlatform();
+    final pi = await DiacClient.getPackageInfo();
     return {
       'user': {
         'days': days,

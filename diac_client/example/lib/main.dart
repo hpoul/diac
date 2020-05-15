@@ -10,7 +10,8 @@ final _logger = Logger('main');
 
 void main() {
   Logger.root.level = Level.ALL;
-  PrintAppender().attachToLogger(Logger.root);
+  PrintAppender(formatter: const DefaultLogRecordFormatter())
+      .attachToLogger(Logger.root);
   runApp(MyApp());
 }
 

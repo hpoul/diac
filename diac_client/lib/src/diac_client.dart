@@ -68,7 +68,7 @@ class DiacClient {
   Future<Uri> _uri(List<String> path,
       {Map<String, String> queryParameters}) async {
     final endpoint = Uri.parse(opts.endpointUrl);
-    final packageInfo = await PackageInfo.fromPlatform();
+    final packageInfo = await getPackageInfo();
     return endpoint.replace(
         pathSegments: endpoint.pathSegments + path,
         queryParameters: <String, String>{
@@ -123,5 +123,17 @@ class DiacClient {
           lastConfig: config,
           lastConfigFetchedAt: clock.now().toUtc(),
         ));
+  }
+
+  static Future<PackageInfo> getPackageInfo() async {
+    if (kIsWeb) {
+      return PackageInfo(
+        packageName: 'design.codeux.diac.web',
+        appName: 'Diac',
+        version: '1.0.0',
+        buildNumber: '0',
+      );
+    }
+    return await PackageInfo.fromPlatform();
   }
 }
