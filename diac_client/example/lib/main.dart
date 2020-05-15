@@ -96,8 +96,16 @@ class _MyAppState extends State<MyApp> with StreamSubscriberMixin {
         body: Column(
           children: <Widget>[
             DiacMaterialBanner(diac: diac),
+            const SizedBox(height: 128),
             const Center(
-              child: Text('Coming soon.'),
+              child: Text('If there are messages, you see them above.'),
+            ),
+            const SizedBox(height: 64),
+            RaisedButton(
+              child: const Text('Reset'),
+              onPressed: () {
+                diac.clear();
+              },
             ),
           ],
         ),

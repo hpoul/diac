@@ -181,6 +181,11 @@ class DiacBloc with StreamSubscriberBase {
     _logger.fine('Disposing.');
     cancelSubscriptions();
   }
+
+  /// clears the persisted state and starts from scratch.
+  void clear() {
+    _client.store.delete();
+  }
 }
 
 extension DiacBlocExt on DiacBloc {

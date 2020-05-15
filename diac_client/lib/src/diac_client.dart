@@ -41,7 +41,6 @@ class DiacClient {
             lastConfigFetchedAt: DateTime.fromMicrosecondsSinceEpoch(0).toUtc(),
           ),
         ) {
-    store.delete();
     store.onValueChangedAndLoad.listen((event) async {
       if (event.lastConfig == null || event.lastConfigFetchedAt == null) {
         _logger.fine('Never fetched configure before, reloading');
