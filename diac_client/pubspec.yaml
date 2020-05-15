@@ -19,6 +19,8 @@ dependencies:
   rxdart: ">=0.24.0 <1.0.0"
   expressions: ">=0.1.5 <1.0.0"
   uuid: ">=2.0.0 <3.0.0"
+  # for the bin/ dart file
+  logging_appenders: ">=0.4.0 <2.0.0"
 
   ######################
   #### plugin dependencies (with native code)

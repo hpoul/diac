@@ -1,0 +1,14 @@
+{
+  "updatedAt": "2020-05-15T20:45:44.714579Z",
+  "messages": [
+    {
+      "uuid": "4606de1f-8f46-4e64-972d-4196843b48e3",
+      "body": "Example message ;-)",
+      "key": "example1",
+      "dateStart": null,
+      "dateEnd": null,
+      "expression": null,
+      "actions": []
+    }
+  ]
+}

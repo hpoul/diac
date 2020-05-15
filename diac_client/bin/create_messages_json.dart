@@ -1,15 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:clock/clock.dart';
-import 'package:diac_client/src/dto/diac_dto.dart';
+import 'package:diac_client/diac_tool.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> main() async {
   final uuid = Uuid();
-  final config = DiacConfig(
-    updatedAt: clock.now().toUtc(),
-    messages: [
+  await DiacTool.instance.syncMessageConfig(
+    File('messages.json'),
+    [
       DiacMessage(
         uuid: uuid.v4(),
         body: 'Example message ;-)',
@@ -18,5 +16,4 @@ Future<void> main() async {
       ),
     ],
   );
-  await File('messages.json').writeAsString(json.encode(config));
 }
