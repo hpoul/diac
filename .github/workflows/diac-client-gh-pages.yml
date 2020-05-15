@@ -19,13 +19,13 @@ jobs:
       - name: Install
         run: |
           flutter config --enable-web
-          cd diac-client && flutter pub get
+          cd diac_client && flutter pub get
       - name: Build
-        run: cd diac-client/example && flutter build web
+        run: cd diac_client/example && flutter build web
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./diac-client/example/build/web
 
