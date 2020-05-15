@@ -8,6 +8,7 @@ import 'package:expressions/expressions.dart';
 import 'package:flutter_async_utils/flutter_async_utils.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
+import 'package:package_info/package_info.dart';
 import 'package:rxdart/rxdart.dart';
 
 final _logger = Logger('diac_bloc');
@@ -53,7 +54,7 @@ class _NewData {
   final DiacData data;
 }
 
-typedef AdditionalContextBuilder = Map<String, Object> Function();
+typedef AdditionalContextBuilder = Future<Map<String, Object>> Function();
 
 class DiacBloc with StreamSubscriberBase {
   DiacBloc({
@@ -109,8 +110,8 @@ class DiacBloc with StreamSubscriberBase {
   Stream<DiacMessage> messageForLabel(String label) =>
       _seenMessages.doOnData((event) {
         _logger.finer('messageForLabel - data: $event');
-      }).map(
-        (data) => _findNextMessageFromData(
+      }).asyncMap(
+        (data) async => _findNextMessageFromData(
           data.data,
           data.closedMessages,
           {
@@ -119,11 +120,11 @@ class DiacBloc with StreamSubscriberBase {
         ),
       );
 
-  DiacMessage _findNextMessageFromData(
+  Future<DiacMessage> _findNextMessageFromData(
     DiacData data,
     Set<String> seenMessages,
     Map<String, Object> context,
-  ) {
+  ) async {
     final now = clock.now();
     _logger.finest('Find next message. ${data.lastConfig.messages}');
     for (final message in data.lastConfig.messages) {
@@ -139,7 +140,7 @@ class DiacBloc with StreamSubscriberBase {
         const evaluator = ExpressionEvaluator();
         final dynamic result = evaluator.eval(
           expr,
-          _createExpressionContext(data, context),
+          await _createExpressionContext(data, context),
         );
         _logger.finest('Evaluated expression ${message.expression} '
             'with $context: $result');
@@ -153,14 +154,20 @@ class DiacBloc with StreamSubscriberBase {
     return null;
   }
 
-  Map<String, Object> _createExpressionContext(
-      DiacData data, Map<String, Object> context) {
+  Future<Map<String, Object>> _createExpressionContext(
+      DiacData data, Map<String, Object> context) async {
     assert(data != null);
     assert(context != null);
     final days = data.firstLaunch.difference(clock.now()).abs().inDays;
+    final pi = await PackageInfo.fromPlatform();
     return {
       'user': {
         'days': days,
+      },
+      'packageInfo': {
+        'version': pi.version,
+        'buildNumber': int.tryParse(pi.buildNumber),
+        'packageName': pi.packageName,
       },
       'action': (String messageKey) {
         final result = data.seen
@@ -172,7 +179,7 @@ class DiacBloc with StreamSubscriberBase {
         _logger.fine('finding action for $messageKey = $result');
         return result;
       },
-      ...?contextBuilder == null ? null : contextBuilder(),
+      ...?contextBuilder == null ? null : await contextBuilder(),
       ...context,
     };
   }
