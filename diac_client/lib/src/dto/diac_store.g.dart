@@ -34,17 +34,21 @@ Map<String, dynamic> _$_$_DiacDataToJson(_$_DiacData instance) =>
 
 _$_DiacHistory _$_$_DiacHistoryFromJson(Map<String, dynamic> json) {
   return _$_DiacHistory(
-    messageUuid: json['messageUuid'] as String,
+    messageUuid: json['id'] as String,
+    messageKey: json['key'] as String,
     closedAt: json['closedAt'] == null
         ? null
         : DateTime.parse(json['closedAt'] as String),
+    action: json['action'] as String,
   );
 }
 
 Map<String, dynamic> _$_$_DiacHistoryToJson(_$_DiacHistory instance) =>
     <String, dynamic>{
-      'messageUuid': instance.messageUuid,
+      'id': instance.messageUuid,
+      'key': instance.messageKey,
       'closedAt': instance.closedAt?.toIso8601String(),
+      'action': instance.action,
     };
 
 // **************************************************************************

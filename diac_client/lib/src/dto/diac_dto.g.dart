@@ -8,6 +8,9 @@ part of 'diac_dto.dart';
 
 _$_DiacConfig _$_$_DiacConfigFromJson(Map<String, dynamic> json) {
   return _$_DiacConfig(
+    updatedAt: json['updatedAt'] == null
+        ? null
+        : DateTime.parse(json['updatedAt'] as String),
     messages: (json['messages'] as List)
         ?.map((e) =>
             e == null ? null : DiacMessage.fromJson(e as Map<String, dynamic>))
@@ -17,6 +20,7 @@ _$_DiacConfig _$_$_DiacConfigFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$_$_DiacConfigToJson(_$_DiacConfig instance) =>
     <String, dynamic>{
+      'updatedAt': instance.updatedAt?.toIso8601String(),
       'messages': instance.messages,
     };
 
@@ -24,7 +28,7 @@ _$_DiacMessage _$_$_DiacMessageFromJson(Map<String, dynamic> json) {
   return _$_DiacMessage(
     uuid: json['uuid'] as String,
     body: json['body'] as String,
-    sku: json['sku'] as String,
+    key: json['key'] as String,
     dateStart: json['dateStart'] == null
         ? null
         : DateTime.parse(json['dateStart'] as String),
@@ -44,7 +48,7 @@ Map<String, dynamic> _$_$_DiacMessageToJson(_$_DiacMessage instance) =>
     <String, dynamic>{
       'uuid': instance.uuid,
       'body': instance.body,
-      'sku': instance.sku,
+      'key': instance.key,
       'dateStart': instance.dateStart?.toIso8601String(),
       'dateEnd': instance.dateEnd?.toIso8601String(),
       'expression': instance.expression,
@@ -53,6 +57,7 @@ Map<String, dynamic> _$_$_DiacMessageToJson(_$_DiacMessage instance) =>
 
 _$_DiacMessageAction _$_$_DiacMessageActionFromJson(Map<String, dynamic> json) {
   return _$_DiacMessageAction(
+    key: json['key'] as String,
     label: json['label'] as String,
     url: json['url'] as String,
   );
@@ -61,6 +66,7 @@ _$_DiacMessageAction _$_$_DiacMessageActionFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$_$_DiacMessageActionToJson(
         _$_DiacMessageAction instance) =>
     <String, dynamic>{
+      'key': instance.key,
       'label': instance.label,
       'url': instance.url,
     };

@@ -6,6 +6,7 @@ part 'diac_dto.freezed.dart';
 @freezed
 abstract class DiacConfig with _$DiacConfig {
   const factory DiacConfig({
+    @required DateTime updatedAt,
     @required List<DiacMessage> messages,
   }) = _DiacConfig;
 
@@ -18,7 +19,7 @@ abstract class DiacMessage with _$DiacMessage {
   const factory DiacMessage({
     @required String uuid,
     @required String body,
-    @required String sku,
+    @required String key,
     DateTime dateStart,
     DateTime dateEnd,
     String expression,
@@ -32,6 +33,7 @@ abstract class DiacMessage with _$DiacMessage {
 @freezed
 abstract class DiacMessageAction with _$DiacMessageAction {
   const factory DiacMessageAction({
+    @required String key,
     @required String label,
     String url,
   }) = _DiacMessageAction;

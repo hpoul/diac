@@ -33,6 +33,10 @@ class _DiacMaterialBannerState extends State<DiacMaterialBanner> {
     return StreamBuilder<DiacMessage>(
       stream: widget.diac.messageForLabel(widget.label),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          _logger.warning('error showing diac message.', snapshot.error);
+        }
+        _logger.finer('snapshot $snapshot');
         if (!snapshot.hasData) {
           return const SizedBox();
         }
@@ -41,26 +45,32 @@ class _DiacMaterialBannerState extends State<DiacMaterialBanner> {
         widget.diac.publishEvent(
           DiacEvent(type: DiacEventType.shown, message: msg),
         );
-        return MaterialBanner(
-          content: Text(msg.body),
-          actions: msg.actions
-              .map(
-                (action) => FlatButton(
-                  child: Text(action.label),
-                  onPressed: () {
-                    if (action.url != null) {
-                      launch(
-                        action.url,
-                        forceSafariVC: false,
-                        forceWebView: false,
-                      );
-                    }
-                    widget.diac.publishEvent(
-                        DiacEventDismissed(message: msg, action: action));
-                  },
-                ),
-              )
-              .toList(),
+        final actions = msg.actions.isNotEmpty
+            ? msg.actions
+            : [const DiacMessageAction(key: 'a', label: 'Dismiss')];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: MaterialBanner(
+            content: Text(msg.body),
+            actions: actions
+                .map(
+                  (action) => FlatButton(
+                    child: Text(action.label),
+                    onPressed: () {
+                      if (action.url != null) {
+                        launch(
+                          action.url,
+                          forceSafariVC: false,
+                          forceWebView: false,
+                        );
+                      }
+                      widget.diac.publishEvent(
+                          DiacEventDismissed(message: msg, action: action));
+                    },
+                  ),
+                )
+                .toList(),
+          ),
         );
       },
     );

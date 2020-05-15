@@ -22,6 +22,11 @@ class DiacEvent {
 
   final DiacEventType type;
   final DiacMessage message;
+
+  @override
+  String toString() {
+    return 'DiacEvent{type: $type, message: $message}';
+  }
 }
 
 class DiacEventDismissed extends DiacEvent {
@@ -31,6 +36,11 @@ class DiacEventDismissed extends DiacEvent {
   }) : super(type: DiacEventType.dismissed, message: message);
 
   final DiacMessageAction action;
+
+  @override
+  String toString() {
+    return 'DiacEventDismissed{action: $action, ${super.toString()}}';
+  }
 }
 
 class _NewData {
@@ -47,31 +57,41 @@ typedef AdditionalContextBuilder = Map<String, Object> Function();
 
 class DiacBloc with StreamSubscriberBase {
   DiacBloc({
-    @required String endpointUrl,
+    @required DiacOpts opts,
     this.contextBuilder,
-  })  : assert(endpointUrl != null),
-        _client = DiacClient(endpointUrl) {
+  })  : assert(opts != null),
+        _client = DiacClient(opts: opts) {
 //    handle(_client.store.onValueChanged.listen((event) {
 //      seenMessages.clear();
 //      seenMessages.addAll(event.seen.map((e) => e.messageUuid));
 //    }));
-    _seenMessages = _client.store.onValueChangedAndLoad.map((event) {
-      return _NewData(
-        closedMessages: event.seen
-            .where((e) => e.closedAt != null)
-            .map((e) => e.messageUuid)
-            .toSet(),
-        data: event,
-      );
-    }).shareValue();
+    _seenMessages = _client.store.onValueChangedAndLoad
+        .map((event) {
+          return _NewData(
+            closedMessages: event.seen
+                .where((e) => e.closedAt != null)
+                .map((e) => e.messageUuid)
+                .toSet(),
+            data: event,
+          );
+        })
+        .publishValue()
+        .autoConnect(connection: (sub) => handle(sub))
+        .doOnDone(() {
+          _logger.finer('Done?!');
+        });
     handle(events.listen((event) {
+      _logger.fine('handling event $event');
       if (event is DiacEventDismissed) {
+        _logger.finer('setting ${event.message.uuid} as dismissed.');
         _client.store.update((data) => data.copyWith(seen: [
               ...data.seen,
               DiacHistory(
                 messageUuid: event.message.uuid,
+                messageKey: event.message.key,
                 closedAt: clock.now(),
-              )
+                action: event.action.key,
+              ),
             ]));
       }
     }));
@@ -86,11 +106,16 @@ class DiacBloc with StreamSubscriberBase {
   /// expression of [DiacMessage].
   final AdditionalContextBuilder contextBuilder;
 
-  Stream<DiacMessage> messageForLabel(String label) => _seenMessages.map(
+  Stream<DiacMessage> messageForLabel(String label) =>
+      _seenMessages.doOnData((event) {
+        _logger.finer('messageForLabel - data: $event');
+      }).map(
         (data) => _findNextMessageFromData(
           data.data,
           data.closedMessages,
-          {'label': label},
+          {
+            'label': label,
+          },
         ),
       );
 
@@ -100,8 +125,10 @@ class DiacBloc with StreamSubscriberBase {
     Map<String, Object> context,
   ) {
     final now = clock.now();
+    _logger.finest('Find next message. ${data.lastConfig.messages}');
     for (final message in data.lastConfig.messages) {
       if (seenMessages.contains(message.uuid)) {
+        _logger.finest('message was already seen ${message.uuid}');
         continue;
       }
       if (!now.isInRange(message.dateStart, message.dateEnd)) {
@@ -135,12 +162,23 @@ class DiacBloc with StreamSubscriberBase {
       'user': {
         'days': days,
       },
+      'action': (String messageKey) {
+        final result = data.seen
+            .lastWhere(
+                (element) =>
+                    element.messageKey == messageKey && element.action != null,
+                orElse: () => null)
+            ?.action;
+        _logger.fine('finding action for $messageKey = $result');
+        return result;
+      },
       ...?contextBuilder == null ? null : contextBuilder(),
       ...context,
     };
   }
 
   void dispose() {
+    _logger.fine('Disposing.');
     cancelSubscriptions();
   }
 }

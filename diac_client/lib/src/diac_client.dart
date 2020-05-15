@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:clock/clock.dart';
 import 'package:diac_client/src/dto/diac_dto.dart';
 import 'package:diac_client/src/dto/diac_store.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info/package_info.dart';
@@ -11,24 +12,37 @@ import 'package:simple_json_persistence/simple_json_persistence.dart';
 
 final _logger = Logger('diac_client');
 
-class DiacClient {
+class DiacOpts {
   ///
   /// [initialConfig]: initial config used before first http request,
   /// or if config fetching is disabled.
-  DiacClient(
-    this.endpointUrl, {
-    DiacConfig initialConfig,
+  DiacOpts({
+    @required this.endpointUrl,
+    this.initialConfig,
     this.disableConfigFetch = false,
-  }) : store = SimpleJsonPersistence.getForTypeSync(
+  })  : assert(endpointUrl != null),
+        assert(disableConfigFetch != null);
+  final String endpointUrl;
+  final DiacConfig initialConfig;
+
+  /// Do not fetch configuration. This can be useful if you want to allow
+  /// users to opt out of in app communications.
+  final bool disableConfigFetch;
+}
+
+class DiacClient {
+  DiacClient({this.opts})
+      : store = SimpleJsonPersistence.getForTypeSync(
           (data) => DiacData.fromJson(data),
           defaultCreator: () => DiacData(
             firstLaunch: clock.now().toUtc(),
             seen: [],
-            lastConfig: initialConfig,
+            lastConfig: opts.initialConfig,
             lastConfigFetchedAt: DateTime.fromMicrosecondsSinceEpoch(0).toUtc(),
           ),
         ) {
-    store.onValueChanged.listen((event) async {
+    store.delete();
+    store.onValueChangedAndLoad.listen((event) async {
       if (event.lastConfig == null || event.lastConfigFetchedAt == null) {
         _logger.fine('Never fetched configure before, reloading');
         await reloadConfigFromServer();
@@ -39,22 +53,22 @@ class DiacClient {
           1) {
         _logger.fine('config fetched >1 hour ago. reload.');
         await reloadConfigFromServer();
+      } else if (opts.initialConfig != null &&
+          opts.initialConfig.updatedAt.isAfter(event.lastConfig.updatedAt)) {
+        await _updateConfig(opts.initialConfig);
       }
     });
   }
 
   Client _client;
 
-  /// Do not fetch configuration. This can be useful if you want to allow
-  /// users to opt out of in app communications.
-  bool disableConfigFetch;
+  DiacOpts opts;
 
-  final String endpointUrl;
   final SimpleJsonPersistence<DiacData> store;
 
   Future<Uri> _uri(List<String> path,
       {Map<String, String> queryParameters}) async {
-    final endpoint = Uri.parse(endpointUrl);
+    final endpoint = Uri.parse(opts.endpointUrl);
     final packageInfo = await PackageInfo.fromPlatform();
     return endpoint.replace(
         pathSegments: endpoint.pathSegments + path,
@@ -66,9 +80,9 @@ class DiacClient {
   }
 
   Future<DiacConfig> _fetchConfig() async {
-    if (disableConfigFetch) {
+    if (opts.disableConfigFetch) {
       _logger.finer('iac message fetching disabled.');
-      return null;
+      return opts.initialConfig;
     }
     final uri = _uri(['messages.json']);
     try {
@@ -102,6 +116,10 @@ class DiacClient {
     if (config == null) {
       return;
     }
+    await _updateConfig(config);
+  }
+
+  Future<void> _updateConfig(DiacConfig config) async {
     await store.update((data) => data.copyWith(
           lastConfig: config,
           lastConfigFetchedAt: clock.now().toUtc(),

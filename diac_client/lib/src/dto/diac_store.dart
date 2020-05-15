@@ -23,8 +23,12 @@ abstract class DiacData with _$DiacData implements HasToJson {
 @freezed
 abstract class DiacHistory with _$DiacHistory {
   const factory DiacHistory({
-    @required String messageUuid,
+    @JsonKey(name: 'id') @required String messageUuid,
+    @JsonKey(name: 'key') @required String messageKey,
     DateTime closedAt,
+
+    /// tapped action of that message.
+    String action,
   }) = _DiacHistory;
 
   factory DiacHistory.fromJson(Map<String, dynamic> json) =>

@@ -15,8 +15,10 @@ DiacConfig _$DiacConfigFromJson(Map<String, dynamic> json) {
 class _$DiacConfigTearOff {
   const _$DiacConfigTearOff();
 
-  _DiacConfig call({@required List<DiacMessage> messages}) {
+  _DiacConfig call(
+      {@required DateTime updatedAt, @required List<DiacMessage> messages}) {
     return _DiacConfig(
+      updatedAt: updatedAt,
       messages: messages,
     );
   }
@@ -26,6 +28,7 @@ class _$DiacConfigTearOff {
 const $DiacConfig = _$DiacConfigTearOff();
 
 mixin _$DiacConfig {
+  DateTime get updatedAt;
   List<DiacMessage> get messages;
 
   Map<String, dynamic> toJson();
@@ -36,7 +39,7 @@ abstract class $DiacConfigCopyWith<$Res> {
   factory $DiacConfigCopyWith(
           DiacConfig value, $Res Function(DiacConfig) then) =
       _$DiacConfigCopyWithImpl<$Res>;
-  $Res call({List<DiacMessage> messages});
+  $Res call({DateTime updatedAt, List<DiacMessage> messages});
 }
 
 class _$DiacConfigCopyWithImpl<$Res> implements $DiacConfigCopyWith<$Res> {
@@ -48,9 +51,12 @@ class _$DiacConfigCopyWithImpl<$Res> implements $DiacConfigCopyWith<$Res> {
 
   @override
   $Res call({
+    Object updatedAt = freezed,
     Object messages = freezed,
   }) {
     return _then(_value.copyWith(
+      updatedAt:
+          updatedAt == freezed ? _value.updatedAt : updatedAt as DateTime,
       messages:
           messages == freezed ? _value.messages : messages as List<DiacMessage>,
     ));
@@ -62,7 +68,7 @@ abstract class _$DiacConfigCopyWith<$Res> implements $DiacConfigCopyWith<$Res> {
           _DiacConfig value, $Res Function(_DiacConfig) then) =
       __$DiacConfigCopyWithImpl<$Res>;
   @override
-  $Res call({List<DiacMessage> messages});
+  $Res call({DateTime updatedAt, List<DiacMessage> messages});
 }
 
 class __$DiacConfigCopyWithImpl<$Res> extends _$DiacConfigCopyWithImpl<$Res>
@@ -76,9 +82,12 @@ class __$DiacConfigCopyWithImpl<$Res> extends _$DiacConfigCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object updatedAt = freezed,
     Object messages = freezed,
   }) {
     return _then(_DiacConfig(
+      updatedAt:
+          updatedAt == freezed ? _value.updatedAt : updatedAt as DateTime,
       messages:
           messages == freezed ? _value.messages : messages as List<DiacMessage>,
     ));
@@ -87,23 +96,30 @@ class __$DiacConfigCopyWithImpl<$Res> extends _$DiacConfigCopyWithImpl<$Res>
 
 @JsonSerializable()
 class _$_DiacConfig implements _DiacConfig {
-  const _$_DiacConfig({@required this.messages}) : assert(messages != null);
+  const _$_DiacConfig({@required this.updatedAt, @required this.messages})
+      : assert(updatedAt != null),
+        assert(messages != null);
 
   factory _$_DiacConfig.fromJson(Map<String, dynamic> json) =>
       _$_$_DiacConfigFromJson(json);
 
   @override
+  final DateTime updatedAt;
+  @override
   final List<DiacMessage> messages;
 
   @override
   String toString() {
-    return 'DiacConfig(messages: $messages)';
+    return 'DiacConfig(updatedAt: $updatedAt, messages: $messages)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _DiacConfig &&
+            (identical(other.updatedAt, updatedAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.updatedAt, updatedAt)) &&
             (identical(other.messages, messages) ||
                 const DeepCollectionEquality()
                     .equals(other.messages, messages)));
@@ -111,7 +127,9 @@ class _$_DiacConfig implements _DiacConfig {
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(messages);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(updatedAt) ^
+      const DeepCollectionEquality().hash(messages);
 
   @override
   _$DiacConfigCopyWith<_DiacConfig> get copyWith =>
@@ -124,12 +142,15 @@ class _$_DiacConfig implements _DiacConfig {
 }
 
 abstract class _DiacConfig implements DiacConfig {
-  const factory _DiacConfig({@required List<DiacMessage> messages}) =
-      _$_DiacConfig;
+  const factory _DiacConfig(
+      {@required DateTime updatedAt,
+      @required List<DiacMessage> messages}) = _$_DiacConfig;
 
   factory _DiacConfig.fromJson(Map<String, dynamic> json) =
       _$_DiacConfig.fromJson;
 
+  @override
+  DateTime get updatedAt;
   @override
   List<DiacMessage> get messages;
   @override
@@ -146,7 +167,7 @@ class _$DiacMessageTearOff {
   _DiacMessage call(
       {@required String uuid,
       @required String body,
-      @required String sku,
+      @required String key,
       DateTime dateStart,
       DateTime dateEnd,
       String expression,
@@ -154,7 +175,7 @@ class _$DiacMessageTearOff {
     return _DiacMessage(
       uuid: uuid,
       body: body,
-      sku: sku,
+      key: key,
       dateStart: dateStart,
       dateEnd: dateEnd,
       expression: expression,
@@ -169,7 +190,7 @@ const $DiacMessage = _$DiacMessageTearOff();
 mixin _$DiacMessage {
   String get uuid;
   String get body;
-  String get sku;
+  String get key;
   DateTime get dateStart;
   DateTime get dateEnd;
   String get expression;
@@ -186,7 +207,7 @@ abstract class $DiacMessageCopyWith<$Res> {
   $Res call(
       {String uuid,
       String body,
-      String sku,
+      String key,
       DateTime dateStart,
       DateTime dateEnd,
       String expression,
@@ -204,7 +225,7 @@ class _$DiacMessageCopyWithImpl<$Res> implements $DiacMessageCopyWith<$Res> {
   $Res call({
     Object uuid = freezed,
     Object body = freezed,
-    Object sku = freezed,
+    Object key = freezed,
     Object dateStart = freezed,
     Object dateEnd = freezed,
     Object expression = freezed,
@@ -213,7 +234,7 @@ class _$DiacMessageCopyWithImpl<$Res> implements $DiacMessageCopyWith<$Res> {
     return _then(_value.copyWith(
       uuid: uuid == freezed ? _value.uuid : uuid as String,
       body: body == freezed ? _value.body : body as String,
-      sku: sku == freezed ? _value.sku : sku as String,
+      key: key == freezed ? _value.key : key as String,
       dateStart:
           dateStart == freezed ? _value.dateStart : dateStart as DateTime,
       dateEnd: dateEnd == freezed ? _value.dateEnd : dateEnd as DateTime,
@@ -235,7 +256,7 @@ abstract class _$DiacMessageCopyWith<$Res>
   $Res call(
       {String uuid,
       String body,
-      String sku,
+      String key,
       DateTime dateStart,
       DateTime dateEnd,
       String expression,
@@ -255,7 +276,7 @@ class __$DiacMessageCopyWithImpl<$Res> extends _$DiacMessageCopyWithImpl<$Res>
   $Res call({
     Object uuid = freezed,
     Object body = freezed,
-    Object sku = freezed,
+    Object key = freezed,
     Object dateStart = freezed,
     Object dateEnd = freezed,
     Object expression = freezed,
@@ -264,7 +285,7 @@ class __$DiacMessageCopyWithImpl<$Res> extends _$DiacMessageCopyWithImpl<$Res>
     return _then(_DiacMessage(
       uuid: uuid == freezed ? _value.uuid : uuid as String,
       body: body == freezed ? _value.body : body as String,
-      sku: sku == freezed ? _value.sku : sku as String,
+      key: key == freezed ? _value.key : key as String,
       dateStart:
           dateStart == freezed ? _value.dateStart : dateStart as DateTime,
       dateEnd: dateEnd == freezed ? _value.dateEnd : dateEnd as DateTime,
@@ -282,14 +303,14 @@ class _$_DiacMessage implements _DiacMessage {
   const _$_DiacMessage(
       {@required this.uuid,
       @required this.body,
-      @required this.sku,
+      @required this.key,
       this.dateStart,
       this.dateEnd,
       this.expression,
       @required this.actions})
       : assert(uuid != null),
         assert(body != null),
-        assert(sku != null),
+        assert(key != null),
         assert(actions != null);
 
   factory _$_DiacMessage.fromJson(Map<String, dynamic> json) =>
@@ -300,7 +321,7 @@ class _$_DiacMessage implements _DiacMessage {
   @override
   final String body;
   @override
-  final String sku;
+  final String key;
   @override
   final DateTime dateStart;
   @override
@@ -312,7 +333,7 @@ class _$_DiacMessage implements _DiacMessage {
 
   @override
   String toString() {
-    return 'DiacMessage(uuid: $uuid, body: $body, sku: $sku, dateStart: $dateStart, dateEnd: $dateEnd, expression: $expression, actions: $actions)';
+    return 'DiacMessage(uuid: $uuid, body: $body, key: $key, dateStart: $dateStart, dateEnd: $dateEnd, expression: $expression, actions: $actions)';
   }
 
   @override
@@ -323,8 +344,8 @@ class _$_DiacMessage implements _DiacMessage {
                 const DeepCollectionEquality().equals(other.uuid, uuid)) &&
             (identical(other.body, body) ||
                 const DeepCollectionEquality().equals(other.body, body)) &&
-            (identical(other.sku, sku) ||
-                const DeepCollectionEquality().equals(other.sku, sku)) &&
+            (identical(other.key, key) ||
+                const DeepCollectionEquality().equals(other.key, key)) &&
             (identical(other.dateStart, dateStart) ||
                 const DeepCollectionEquality()
                     .equals(other.dateStart, dateStart)) &&
@@ -343,7 +364,7 @@ class _$_DiacMessage implements _DiacMessage {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(uuid) ^
       const DeepCollectionEquality().hash(body) ^
-      const DeepCollectionEquality().hash(sku) ^
+      const DeepCollectionEquality().hash(key) ^
       const DeepCollectionEquality().hash(dateStart) ^
       const DeepCollectionEquality().hash(dateEnd) ^
       const DeepCollectionEquality().hash(expression) ^
@@ -363,7 +384,7 @@ abstract class _DiacMessage implements DiacMessage {
   const factory _DiacMessage(
       {@required String uuid,
       @required String body,
-      @required String sku,
+      @required String key,
       DateTime dateStart,
       DateTime dateEnd,
       String expression,
@@ -377,7 +398,7 @@ abstract class _DiacMessage implements DiacMessage {
   @override
   String get body;
   @override
-  String get sku;
+  String get key;
   @override
   DateTime get dateStart;
   @override
@@ -397,8 +418,10 @@ DiacMessageAction _$DiacMessageActionFromJson(Map<String, dynamic> json) {
 class _$DiacMessageActionTearOff {
   const _$DiacMessageActionTearOff();
 
-  _DiacMessageAction call({@required String label, String url}) {
+  _DiacMessageAction call(
+      {@required String key, @required String label, String url}) {
     return _DiacMessageAction(
+      key: key,
       label: label,
       url: url,
     );
@@ -409,6 +432,7 @@ class _$DiacMessageActionTearOff {
 const $DiacMessageAction = _$DiacMessageActionTearOff();
 
 mixin _$DiacMessageAction {
+  String get key;
   String get label;
   String get url;
 
@@ -420,7 +444,7 @@ abstract class $DiacMessageActionCopyWith<$Res> {
   factory $DiacMessageActionCopyWith(
           DiacMessageAction value, $Res Function(DiacMessageAction) then) =
       _$DiacMessageActionCopyWithImpl<$Res>;
-  $Res call({String label, String url});
+  $Res call({String key, String label, String url});
 }
 
 class _$DiacMessageActionCopyWithImpl<$Res>
@@ -433,10 +457,12 @@ class _$DiacMessageActionCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object key = freezed,
     Object label = freezed,
     Object url = freezed,
   }) {
     return _then(_value.copyWith(
+      key: key == freezed ? _value.key : key as String,
       label: label == freezed ? _value.label : label as String,
       url: url == freezed ? _value.url : url as String,
     ));
@@ -449,7 +475,7 @@ abstract class _$DiacMessageActionCopyWith<$Res>
           _DiacMessageAction value, $Res Function(_DiacMessageAction) then) =
       __$DiacMessageActionCopyWithImpl<$Res>;
   @override
-  $Res call({String label, String url});
+  $Res call({String key, String label, String url});
 }
 
 class __$DiacMessageActionCopyWithImpl<$Res>
@@ -464,10 +490,12 @@ class __$DiacMessageActionCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object key = freezed,
     Object label = freezed,
     Object url = freezed,
   }) {
     return _then(_DiacMessageAction(
+      key: key == freezed ? _value.key : key as String,
       label: label == freezed ? _value.label : label as String,
       url: url == freezed ? _value.url : url as String,
     ));
@@ -476,12 +504,16 @@ class __$DiacMessageActionCopyWithImpl<$Res>
 
 @JsonSerializable()
 class _$_DiacMessageAction implements _DiacMessageAction {
-  const _$_DiacMessageAction({@required this.label, this.url})
-      : assert(label != null);
+  const _$_DiacMessageAction(
+      {@required this.key, @required this.label, this.url})
+      : assert(key != null),
+        assert(label != null);
 
   factory _$_DiacMessageAction.fromJson(Map<String, dynamic> json) =>
       _$_$_DiacMessageActionFromJson(json);
 
+  @override
+  final String key;
   @override
   final String label;
   @override
@@ -489,13 +521,15 @@ class _$_DiacMessageAction implements _DiacMessageAction {
 
   @override
   String toString() {
-    return 'DiacMessageAction(label: $label, url: $url)';
+    return 'DiacMessageAction(key: $key, label: $label, url: $url)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _DiacMessageAction &&
+            (identical(other.key, key) ||
+                const DeepCollectionEquality().equals(other.key, key)) &&
             (identical(other.label, label) ||
                 const DeepCollectionEquality().equals(other.label, label)) &&
             (identical(other.url, url) ||
@@ -505,6 +539,7 @@ class _$_DiacMessageAction implements _DiacMessageAction {
   @override
   int get hashCode =>
       runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(key) ^
       const DeepCollectionEquality().hash(label) ^
       const DeepCollectionEquality().hash(url);
 
@@ -519,12 +554,16 @@ class _$_DiacMessageAction implements _DiacMessageAction {
 }
 
 abstract class _DiacMessageAction implements DiacMessageAction {
-  const factory _DiacMessageAction({@required String label, String url}) =
-      _$_DiacMessageAction;
+  const factory _DiacMessageAction(
+      {@required String key,
+      @required String label,
+      String url}) = _$_DiacMessageAction;
 
   factory _DiacMessageAction.fromJson(Map<String, dynamic> json) =
       _$_DiacMessageAction.fromJson;
 
+  @override
+  String get key;
   @override
   String get label;
   @override

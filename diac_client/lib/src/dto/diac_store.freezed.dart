@@ -18,7 +18,7 @@ class _$DiacDataTearOff {
   _DiacData call(
       {@required DateTime firstLaunch,
       @required List<DiacHistory> seen,
-      DateTime lastConfigFetchedAt,
+      @required DateTime lastConfigFetchedAt,
       DiacConfig lastConfig}) {
     return _DiacData(
       firstLaunch: firstLaunch,
@@ -138,10 +138,11 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
   const _$_DiacData(
       {@required this.firstLaunch,
       @required this.seen,
-      this.lastConfigFetchedAt,
+      @required this.lastConfigFetchedAt,
       this.lastConfig})
       : assert(firstLaunch != null),
-        assert(seen != null);
+        assert(seen != null),
+        assert(lastConfigFetchedAt != null);
 
   factory _$_DiacData.fromJson(Map<String, dynamic> json) =>
       _$_$_DiacDataFromJson(json);
@@ -210,7 +211,7 @@ abstract class _DiacData implements DiacData {
   const factory _DiacData(
       {@required DateTime firstLaunch,
       @required List<DiacHistory> seen,
-      DateTime lastConfigFetchedAt,
+      @required DateTime lastConfigFetchedAt,
       DiacConfig lastConfig}) = _$_DiacData;
 
   factory _DiacData.fromJson(Map<String, dynamic> json) = _$_DiacData.fromJson;
@@ -234,10 +235,16 @@ DiacHistory _$DiacHistoryFromJson(Map<String, dynamic> json) {
 class _$DiacHistoryTearOff {
   const _$DiacHistoryTearOff();
 
-  _DiacHistory call({@required String messageUuid, DateTime closedAt}) {
+  _DiacHistory call(
+      {@required @JsonKey(name: 'id') String messageUuid,
+      @required @JsonKey(name: 'key') String messageKey,
+      DateTime closedAt,
+      String action}) {
     return _DiacHistory(
       messageUuid: messageUuid,
+      messageKey: messageKey,
       closedAt: closedAt,
+      action: action,
     );
   }
 }
@@ -246,8 +253,12 @@ class _$DiacHistoryTearOff {
 const $DiacHistory = _$DiacHistoryTearOff();
 
 mixin _$DiacHistory {
+  @JsonKey(name: 'id')
   String get messageUuid;
+  @JsonKey(name: 'key')
+  String get messageKey;
   DateTime get closedAt;
+  String get action;
 
   Map<String, dynamic> toJson();
   $DiacHistoryCopyWith<DiacHistory> get copyWith;
@@ -257,7 +268,11 @@ abstract class $DiacHistoryCopyWith<$Res> {
   factory $DiacHistoryCopyWith(
           DiacHistory value, $Res Function(DiacHistory) then) =
       _$DiacHistoryCopyWithImpl<$Res>;
-  $Res call({String messageUuid, DateTime closedAt});
+  $Res call(
+      {@JsonKey(name: 'id') String messageUuid,
+      @JsonKey(name: 'key') String messageKey,
+      DateTime closedAt,
+      String action});
 }
 
 class _$DiacHistoryCopyWithImpl<$Res> implements $DiacHistoryCopyWith<$Res> {
@@ -270,12 +285,17 @@ class _$DiacHistoryCopyWithImpl<$Res> implements $DiacHistoryCopyWith<$Res> {
   @override
   $Res call({
     Object messageUuid = freezed,
+    Object messageKey = freezed,
     Object closedAt = freezed,
+    Object action = freezed,
   }) {
     return _then(_value.copyWith(
       messageUuid:
           messageUuid == freezed ? _value.messageUuid : messageUuid as String,
+      messageKey:
+          messageKey == freezed ? _value.messageKey : messageKey as String,
       closedAt: closedAt == freezed ? _value.closedAt : closedAt as DateTime,
+      action: action == freezed ? _value.action : action as String,
     ));
   }
 }
@@ -286,7 +306,11 @@ abstract class _$DiacHistoryCopyWith<$Res>
           _DiacHistory value, $Res Function(_DiacHistory) then) =
       __$DiacHistoryCopyWithImpl<$Res>;
   @override
-  $Res call({String messageUuid, DateTime closedAt});
+  $Res call(
+      {@JsonKey(name: 'id') String messageUuid,
+      @JsonKey(name: 'key') String messageKey,
+      DateTime closedAt,
+      String action});
 }
 
 class __$DiacHistoryCopyWithImpl<$Res> extends _$DiacHistoryCopyWithImpl<$Res>
@@ -301,32 +325,48 @@ class __$DiacHistoryCopyWithImpl<$Res> extends _$DiacHistoryCopyWithImpl<$Res>
   @override
   $Res call({
     Object messageUuid = freezed,
+    Object messageKey = freezed,
     Object closedAt = freezed,
+    Object action = freezed,
   }) {
     return _then(_DiacHistory(
       messageUuid:
           messageUuid == freezed ? _value.messageUuid : messageUuid as String,
+      messageKey:
+          messageKey == freezed ? _value.messageKey : messageKey as String,
       closedAt: closedAt == freezed ? _value.closedAt : closedAt as DateTime,
+      action: action == freezed ? _value.action : action as String,
     ));
   }
 }
 
 @JsonSerializable()
 class _$_DiacHistory with DiagnosticableTreeMixin implements _DiacHistory {
-  const _$_DiacHistory({@required this.messageUuid, this.closedAt})
-      : assert(messageUuid != null);
+  const _$_DiacHistory(
+      {@required @JsonKey(name: 'id') this.messageUuid,
+      @required @JsonKey(name: 'key') this.messageKey,
+      this.closedAt,
+      this.action})
+      : assert(messageUuid != null),
+        assert(messageKey != null);
 
   factory _$_DiacHistory.fromJson(Map<String, dynamic> json) =>
       _$_$_DiacHistoryFromJson(json);
 
   @override
+  @JsonKey(name: 'id')
   final String messageUuid;
   @override
+  @JsonKey(name: 'key')
+  final String messageKey;
+  @override
   final DateTime closedAt;
+  @override
+  final String action;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'DiacHistory(messageUuid: $messageUuid, closedAt: $closedAt)';
+    return 'DiacHistory(messageUuid: $messageUuid, messageKey: $messageKey, closedAt: $closedAt, action: $action)';
   }
 
   @override
@@ -335,7 +375,9 @@ class _$_DiacHistory with DiagnosticableTreeMixin implements _DiacHistory {
     properties
       ..add(DiagnosticsProperty('type', 'DiacHistory'))
       ..add(DiagnosticsProperty('messageUuid', messageUuid))
-      ..add(DiagnosticsProperty('closedAt', closedAt));
+      ..add(DiagnosticsProperty('messageKey', messageKey))
+      ..add(DiagnosticsProperty('closedAt', closedAt))
+      ..add(DiagnosticsProperty('action', action));
   }
 
   @override
@@ -345,16 +387,23 @@ class _$_DiacHistory with DiagnosticableTreeMixin implements _DiacHistory {
             (identical(other.messageUuid, messageUuid) ||
                 const DeepCollectionEquality()
                     .equals(other.messageUuid, messageUuid)) &&
+            (identical(other.messageKey, messageKey) ||
+                const DeepCollectionEquality()
+                    .equals(other.messageKey, messageKey)) &&
             (identical(other.closedAt, closedAt) ||
                 const DeepCollectionEquality()
-                    .equals(other.closedAt, closedAt)));
+                    .equals(other.closedAt, closedAt)) &&
+            (identical(other.action, action) ||
+                const DeepCollectionEquality().equals(other.action, action)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(messageUuid) ^
-      const DeepCollectionEquality().hash(closedAt);
+      const DeepCollectionEquality().hash(messageKey) ^
+      const DeepCollectionEquality().hash(closedAt) ^
+      const DeepCollectionEquality().hash(action);
 
   @override
   _$DiacHistoryCopyWith<_DiacHistory> get copyWith =>
@@ -368,15 +417,24 @@ class _$_DiacHistory with DiagnosticableTreeMixin implements _DiacHistory {
 
 abstract class _DiacHistory implements DiacHistory {
   const factory _DiacHistory(
-      {@required String messageUuid, DateTime closedAt}) = _$_DiacHistory;
+      {@required @JsonKey(name: 'id') String messageUuid,
+      @required @JsonKey(name: 'key') String messageKey,
+      DateTime closedAt,
+      String action}) = _$_DiacHistory;
 
   factory _DiacHistory.fromJson(Map<String, dynamic> json) =
       _$_DiacHistory.fromJson;
 
   @override
+  @JsonKey(name: 'id')
   String get messageUuid;
   @override
+  @JsonKey(name: 'key')
+  String get messageKey;
+  @override
   DateTime get closedAt;
+  @override
+  String get action;
   @override
   _$DiacHistoryCopyWith<_DiacHistory> get copyWith;
 }
