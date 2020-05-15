@@ -25,21 +25,26 @@ class DiacTool {
   /// It will take the given [messages] and replace the uuids with the uuids
   /// found in the [file] matched based on the [DiacMessage.key].
   Future<void> syncMessageConfig(File file, List<DiacMessage> messages) async {
-    final config = await _readConfig(file) ??
-        DiacConfig(updatedAt: clock.now().toUtc(), messages: []);
-    final newMessages = messages
-        .map((msg) => msg.copyWith(
-            uuid: config.messages
-                .firstWhere((element) => element.key == msg.key,
-                    orElse: () => msg)
-                .uuid))
-        .toList();
-    final newConfig = config.copyWith(
-      updatedAt: clock.now().toUtc(),
-      messages: newMessages,
-    );
-    await file.writeAsString(jsonEncoder.convert(newConfig));
-    _logger.info('Written to ${file.path}. ✅️');
+    try {
+      final config = await _readConfig(file) ??
+          DiacConfig(updatedAt: clock.now().toUtc(), messages: []);
+      final newMessages = messages
+          .map((msg) => msg.copyWith(
+              uuid: config.messages
+                  .firstWhere((element) => element.key == msg.key,
+                      orElse: () => msg)
+                  .uuid))
+          .toList();
+      final newConfig = config.copyWith(
+        updatedAt: clock.now().toUtc(),
+        messages: newMessages,
+      );
+      await file.parent.create(recursive: true);
+      await file.writeAsString(jsonEncoder.convert(newConfig));
+      _logger.info('Written to ${file.path}. ✅️');
+    } catch (error, stackTrace) {
+      _logger.severe('Error while syncing messages.', error, stackTrace);
+    }
   }
 
   Future<DiacConfig> _readConfig(File file) async {
