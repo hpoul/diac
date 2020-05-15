@@ -21,6 +21,7 @@ class DiacOpts {
     this.initialConfig,
     this.disableConfigFetch = false,
     this.refetchInterval = const Duration(hours: 1),
+    this.refetchIntervalCold = const Duration(hours: 1),
   })  : assert(endpointUrl != null),
         assert(disableConfigFetch != null),
         assert(refetchInterval != null);
@@ -32,7 +33,12 @@ class DiacOpts {
   final bool disableConfigFetch;
 
   /// How often the config should be reloaded from the server.
+  /// While running. For the interval after a (restart) check
+  /// [refetchIntervalCold].
   final Duration refetchInterval;
+
+  /// How much time must have passed before fetching after a start of the app.
+  final Duration refetchIntervalCold;
 }
 
 class DiacClient {
@@ -46,12 +52,17 @@ class DiacClient {
             lastConfigFetchedAt: DateTime.fromMicrosecondsSinceEpoch(0).toUtc(),
           ),
         ) {
+    var coldStart = true;
     store.onValueChangedAndLoad.listen((event) async {
+      final interval =
+          coldStart ? opts.refetchIntervalCold : opts.refetchInterval;
+      coldStart = false;
       if (event.lastConfig == null || event.lastConfigFetchedAt == null) {
         _logger.fine('Never fetched configure before, reloading');
         await reloadConfigFromServer();
       } else if (event.lastConfigFetchedAt.difference(clock.now()).abs() >
-          opts.refetchInterval) {
+          interval) {
+        coldStart = false;
         _logger.fine('config fetched > ${opts.refetchInterval} ago. reload.');
         await reloadConfigFromServer();
       } else if (opts.initialConfig != null &&
