@@ -27,5 +27,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./diac-client/example/build/web
+          publish_dir: ./diac_client/example/build/web
+          allow_empty_commit: true
 
