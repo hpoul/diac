@@ -20,14 +20,19 @@ class DiacOpts {
     @required this.endpointUrl,
     this.initialConfig,
     this.disableConfigFetch = false,
+    this.refetchInterval = const Duration(hours: 1),
   })  : assert(endpointUrl != null),
-        assert(disableConfigFetch != null);
+        assert(disableConfigFetch != null),
+        assert(refetchInterval != null);
   final String endpointUrl;
   final DiacConfig initialConfig;
 
   /// Do not fetch configuration. This can be useful if you want to allow
   /// users to opt out of in app communications.
   final bool disableConfigFetch;
+
+  /// How often the config should be reloaded from the server.
+  final Duration refetchInterval;
 }
 
 class DiacClient {
@@ -45,12 +50,9 @@ class DiacClient {
       if (event.lastConfig == null || event.lastConfigFetchedAt == null) {
         _logger.fine('Never fetched configure before, reloading');
         await reloadConfigFromServer();
-      } else if (event.lastConfigFetchedAt
-              .difference(clock.now())
-              .abs()
-              .inHours >
-          1) {
-        _logger.fine('config fetched >1 hour ago. reload.');
+      } else if (event.lastConfigFetchedAt.difference(clock.now()).abs() >
+          opts.refetchInterval) {
+        _logger.fine('config fetched > ${opts.refetchInterval} ago. reload.');
         await reloadConfigFromServer();
       } else if (opts.initialConfig != null &&
           opts.initialConfig.updatedAt.isAfter(event.lastConfig.updatedAt)) {
