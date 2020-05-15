@@ -18,13 +18,18 @@ class DiacOpts {
   /// or if config fetching is disabled.
   DiacOpts({
     @required this.endpointUrl,
-    this.initialConfig,
+    DiacConfig initialConfig,
     this.disableConfigFetch = false,
     this.refetchInterval = const Duration(hours: 1),
     this.refetchIntervalCold = const Duration(hours: 1),
   })  : assert(endpointUrl != null),
         assert(disableConfigFetch != null),
-        assert(refetchInterval != null);
+        assert(refetchInterval != null),
+        initialConfig = initialConfig ??
+            DiacConfig(
+              updatedAt: DateTime.fromMicrosecondsSinceEpoch(0).toUtc(),
+              messages: [],
+            );
   final String endpointUrl;
   final DiacConfig initialConfig;
 
