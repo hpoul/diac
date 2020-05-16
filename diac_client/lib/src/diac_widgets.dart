@@ -1,4 +1,5 @@
 import 'package:diac_client/src/diac_bloc.dart';
+import 'package:diac_client/src/diac_event.dart';
 import 'package:diac_client/src/dto/diac_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

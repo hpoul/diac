@@ -101,7 +101,7 @@ class DiacClient {
       _logger.finer('iac message fetching disabled.');
       return opts.initialConfig;
     }
-    final uri = _uri(['messages.json']);
+    final uri = await _uri(['messages.json']);
     try {
       _client ??= Client();
       final response = await _client.get(uri);

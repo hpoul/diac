@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clock/clock.dart';
 import 'package:diac_client/src/diac_client.dart';
+import 'package:diac_client/src/diac_event.dart';
 import 'package:diac_client/src/dto/diac_dto.dart';
 import 'package:diac_client/src/dto/diac_store.dart';
 import 'package:expressions/expressions.dart';
@@ -11,37 +12,6 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 final _logger = Logger('diac_bloc');
-
-enum DiacEventType {
-  shown,
-  dismissed,
-}
-
-class DiacEvent {
-  DiacEvent({this.type, this.message});
-
-  final DiacEventType type;
-  final DiacMessage message;
-
-  @override
-  String toString() {
-    return 'DiacEvent{type: $type, message: $message}';
-  }
-}
-
-class DiacEventDismissed extends DiacEvent {
-  DiacEventDismissed({
-    DiacMessage message,
-    this.action,
-  }) : super(type: DiacEventType.dismissed, message: message);
-
-  final DiacMessageAction action;
-
-  @override
-  String toString() {
-    return 'DiacEventDismissed{action: $action, ${super.toString()}}';
-  }
-}
 
 class _NewData {
   _NewData({
@@ -110,7 +80,7 @@ class DiacBloc with StreamSubscriberBase {
       _seenMessages.doOnData((event) {
         _logger.finer('messageForLabel - data: $event');
       }).asyncMap(
-        (data) async => _findNextMessageFromData(
+        (data) async => await _findNextMessageFromData(
           data.data,
           data.closedMessages,
           {
@@ -155,6 +125,7 @@ class DiacBloc with StreamSubscriberBase {
       rethrow;
     }
 //    data.seen
+    _logger.finer('no message found.');
     return null;
   }
 
