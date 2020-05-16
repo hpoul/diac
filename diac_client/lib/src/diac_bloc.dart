@@ -45,7 +45,7 @@ class DiacBloc with StreamSubscriberBase {
             data: event,
           );
         })
-        .publishValue()
+        .publishValueAsync()
         .autoConnect(connection: (sub) => handle(sub))
         .doOnDone(() {
           _logger.finer('Done?!');
@@ -179,4 +179,10 @@ extension DiacBlocExt on DiacBloc {
 extension on DateTime {
   bool isInRange(DateTime start, DateTime end) =>
       (start == null || isAfter(start)) && (end == null || isBefore(end));
+}
+
+extension<T> on Stream<T> {
+  /// TODO remove this once this is resolved: https://github.com/ReactiveX/rxdart/issues/463
+  ValueConnectableStream<T> publishValueAsync() =>
+      ValueConnectableStream<T>(this, sync: false);
 }
