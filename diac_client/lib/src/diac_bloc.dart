@@ -107,14 +107,22 @@ class DiacBloc with StreamSubscriberBase {
         }
         if (message.expression != null) {
           final expr = Expression.parse(message.expression);
-          const evaluator = ExpressionEvaluator();
-          final dynamic result = evaluator.eval(
-            expr,
-            await _createExpressionContext(data, context),
-          );
-          _logger.finest('Evaluated expression ${message.expression} '
-              'with $context: $result');
-          if (result is bool && !result) {
+          const evaluator = MapAwareEvaluator();
+          try {
+            final dynamic result = evaluator.eval(
+              expr,
+              await _createExpressionContext(data, context),
+            );
+            _logger.finest('Evaluated expression ${message.expression} '
+                'with $context: $result');
+            if (result is bool && !result) {
+              continue;
+            }
+          } catch (e, stackTrace) {
+            _logger.warning(
+                'Error while evaluating expression ${message.expression}. Skipping.',
+                e,
+                stackTrace);
             continue;
           }
         }
@@ -185,4 +193,20 @@ extension<T> on Stream<T> {
   /// TODO remove this once this is resolved: https://github.com/ReactiveX/rxdart/issues/463
   ValueConnectableStream<T> publishValueAsync() =>
       ValueConnectableStream<T>(this, sync: false);
+}
+
+class MapAwareEvaluator extends ExpressionEvaluator {
+  const MapAwareEvaluator();
+
+  @override
+  dynamic evalMemberExpression(
+      MemberExpression expression, Map<String, dynamic> context) {
+    var object = eval(expression.object, context);
+    if (object is Map) {
+      return object[expression.property.name];
+    } else {
+      throw UnsupportedError('Member expressions not supported for '
+          '${object.runtimeType} $object');
+    }
+  }
 }
