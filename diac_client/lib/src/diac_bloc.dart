@@ -201,7 +201,7 @@ class MapAwareEvaluator extends ExpressionEvaluator {
   @override
   dynamic evalMemberExpression(
       MemberExpression expression, Map<String, dynamic> context) {
-    var object = eval(expression.object, context);
+    final dynamic object = eval(expression.object, context);
     if (object is Map) {
       return object[expression.property.name];
     } else {
