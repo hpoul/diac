@@ -106,15 +106,16 @@ class DiacApi {
         ...?headers,
       });
       final type = response.statusCode ~/ 100;
+      final body = utf8.decode(response.bodyBytes);
       if (type != 2) {
         _logger.fine('Error while loading diac config. ${response.statusCode}'
-            ' - ${response.body}');
+            ' - $body');
         return null;
       }
       _logger.finest('Got response ${response.statusCode},'
-          ' ${response.body.length}');
+          ' ${body.length}');
       return DiacConfig.fromJson(
-        json.decode(response.body) as Map<String, dynamic>,
+        json.decode(body) as Map<String, dynamic>,
       );
     } catch (e, stackTrace) {
       _logger.warning(
