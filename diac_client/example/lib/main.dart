@@ -6,7 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:uuid/uuid.dart';
 
-final _logger = Logger('main');
+final _logger = Logger('diac.main');
 
 void main() {
   Logger.root.level = Level.ALL;

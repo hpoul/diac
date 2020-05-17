@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final _logger = Logger('diac_widgets');
+final _logger = Logger('diac.diac_widgets');
 
 /// Displays a in app communication message, if there is one available which
 /// has to be displayed.

@@ -15,7 +15,7 @@ import 'package:mockito/mockito.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:uuid/uuid.dart';
 
-final _logger = Logger('diac_client_test');
+final _logger = Logger('diac.diac_client_test');
 
 void main() {
   Logger.root.level = Level.ALL;

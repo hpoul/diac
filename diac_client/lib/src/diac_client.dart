@@ -11,7 +11,7 @@ import 'package:package_info/package_info.dart';
 import 'package:simple_json_persistence/simple_json_persistence.dart';
 import 'package:uuid/uuid.dart';
 
-final _logger = Logger('diac_client');
+final _logger = Logger('diac.diac_client');
 
 class DiacOpts {
   ///

@@ -6,7 +6,7 @@ import 'package:diac_client/src/dto/diac_dto.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 
-final _logger = Logger('diac_tool');
+final _logger = Logger('diac.diac_tool');
 
 const jsonEncoder = JsonEncoder.withIndent('  ');
 

@@ -11,7 +11,7 @@ import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
-final _logger = Logger('diac_bloc');
+final _logger = Logger('diac.diac_bloc');
 
 class _NewData {
   _NewData({
