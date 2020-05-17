@@ -10,6 +10,7 @@ import 'package:flutter_async_utils/flutter_async_utils.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final _logger = Logger('diac.diac_bloc');
 
@@ -24,11 +25,14 @@ class _NewData {
 }
 
 typedef AdditionalContextBuilder = Future<Map<String, Object>> Function();
+typedef CustomActionHandler = Future<bool> Function(
+    DiacEventTriggerCustom event);
 
 class DiacBloc with StreamSubscriberBase {
   DiacBloc({
     @required DiacOpts opts,
     this.contextBuilder,
+    this.customActions = const {},
   })  : assert(opts != null),
         _client = DiacClient(opts: opts) {
 //    handle(_client.store.onValueChanged.listen((event) {
@@ -69,6 +73,7 @@ class DiacBloc with StreamSubscriberBase {
 
   final DiacClient _client;
   final StreamController<DiacEvent> _events = StreamController.broadcast();
+  final Map<String, CustomActionHandler> customActions;
   Stream<_NewData> _seenMessages;
 
   Stream<DiacEvent> get events => _events.stream;
@@ -173,6 +178,30 @@ class DiacBloc with StreamSubscriberBase {
       ...?contextBuilder == null ? null : await contextBuilder(),
       ...context,
     };
+  }
+
+  Future<void> triggerAction(DiacEventTriggerCustom event) async {
+    final uri = event.uri;
+    if (uri.scheme == 'diac') {
+      final action = customActions[uri.host];
+      if (action != null) {
+        final result = await action(event);
+        if (result != true) {
+          _logger.warning('action did not return true for $uri ($result)');
+        }
+      } else {
+        _logger.warning('No action handler for ${uri.host}');
+      }
+      publishEvent(event);
+    } else {
+      if (!await launch(
+        event.action.url,
+        forceSafariVC: false,
+        forceWebView: false,
+      )) {
+        _logger.warning('Unable to launch url ${event.action.url}');
+      }
+    }
   }
 
   void dispose() {

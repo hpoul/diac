@@ -4,7 +4,6 @@ import 'package:diac_client/src/dto/diac_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 final _logger = Logger('diac.diac_widgets');
 
@@ -57,13 +56,13 @@ class _DiacMaterialBannerState extends State<DiacMaterialBanner> {
                 .map(
                   (action) => FlatButton(
                     child: Text(action.label),
-                    onPressed: () {
+                    onPressed: () async {
                       if (action.url != null) {
-                        launch(
-                          action.url,
-                          forceSafariVC: false,
-                          forceWebView: false,
-                        );
+                        await widget.diac.triggerAction(DiacEventTriggerCustom(
+                          message: msg,
+                          action: action,
+                          uri: Uri.parse(action.url),
+                        ));
                       }
                       widget.diac.publishEvent(
                           DiacEventDismissed(message: msg, action: action));

@@ -1,7 +1,9 @@
 import 'package:diac_client/src/dto/diac_dto.dart';
+import 'package:flutter/foundation.dart';
 
 enum DiacEventType {
   shown,
+  trigger,
   dismissed,
 }
 
@@ -10,7 +12,9 @@ extension DiacEventTypeToString on DiacEventType {
 }
 
 class DiacEvent {
-  DiacEvent({this.type, this.message});
+  DiacEvent({@required this.type, @required this.message})
+      : assert(type != null),
+        assert(message != null);
 
   final DiacEventType type;
   final DiacMessage message;
@@ -21,12 +25,31 @@ class DiacEvent {
   }
 }
 
-class DiacEventDismissed extends DiacEvent {
+abstract class DiacEventWithAction implements DiacEvent {
+  DiacMessageAction get action;
+}
+
+class DiacEventTriggerCustom extends DiacEvent implements DiacEventWithAction {
+  DiacEventTriggerCustom({
+    @required DiacMessage message,
+    @required this.action,
+    @required this.uri,
+  })  : assert(uri != null),
+        assert(action != null),
+        super(type: DiacEventType.dismissed, message: message);
+
+  @override
+  final DiacMessageAction action;
+  final Uri uri;
+}
+
+class DiacEventDismissed extends DiacEvent implements DiacEventWithAction {
   DiacEventDismissed({
-    DiacMessage message,
+    @required DiacMessage message,
     this.action,
   }) : super(type: DiacEventType.dismissed, message: message);
 
+  @override
   final DiacMessageAction action;
 
   @override
