@@ -77,18 +77,24 @@ class DiacBloc with StreamSubscriberBase {
   /// expression of [DiacMessage].
   final AdditionalContextBuilder contextBuilder;
 
+  final Map<String, ValueStream<DiacMessage>> _messageForLabel = {};
+
   Stream<DiacMessage> messageForLabel(String label) =>
-      _seenMessages.doOnData((event) {
-        _logger.finer('messageForLabel - data: $event');
-      }).asyncMap(
-        (data) async => await _findNextMessageFromData(
-          data.data,
-          data.closedMessages,
-          {
-            'label': label,
-          },
-        ),
-      );
+      _messageForLabel[label] ??= _seenMessages
+          .doOnData((event) {
+            _logger.finer('messageForLabel - data: $event');
+          })
+          .asyncMap(
+            (data) async => await _findNextMessageFromData(
+              data.data,
+              data.closedMessages,
+              {
+                'label': label,
+              },
+            ),
+          )
+          .publishValueAsync()
+          .autoConnect();
 
   Future<DiacMessage> _findNextMessageFromData(
     DiacData data,
@@ -172,6 +178,7 @@ class DiacBloc with StreamSubscriberBase {
   void dispose() {
     _logger.fine('Disposing.');
     cancelSubscriptions();
+    _messageForLabel.clear();
   }
 
   /// clears the persisted state and starts from scratch.
