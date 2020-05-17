@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info/package_info.dart';
 import 'package:simple_json_persistence/simple_json_persistence.dart';
+import 'package:uuid/uuid.dart';
 
 final _logger = Logger('diac_client');
 
@@ -22,14 +23,20 @@ class DiacOpts {
     this.disableConfigFetch = false,
     this.refetchInterval = const Duration(hours: 1),
     this.refetchIntervalCold = const Duration(hours: 1),
+    this.httpClient = createClient,
   })  : assert(endpointUrl != null),
         assert(disableConfigFetch != null),
         assert(refetchInterval != null),
+        assert(httpClient != null),
+        assert(!endpointUrl.endsWith('/')),
         initialConfig = initialConfig ??
             DiacConfig(
               updatedAt: DateTime.fromMicrosecondsSinceEpoch(0).toUtc(),
               messages: [],
             );
+
+  /// base path to the API endpoint.
+  /// Must not end in '/'
   final String endpointUrl;
   final DiacConfig initialConfig;
 
@@ -44,6 +51,77 @@ class DiacOpts {
 
   /// How much time must have passed before fetching after a start of the app.
   final Duration refetchIntervalCold;
+
+  final Client Function() httpClient;
+
+  static Client createClient() => Client();
+}
+
+String _operatingSystem() => kIsWeb ? 'web' : Platform.operatingSystem;
+
+class DiacApi {
+  DiacApi({
+    @required this.opts,
+    @required this.packageInfo,
+    this.headers,
+  })  : assert(opts != null),
+        assert(packageInfo != null);
+
+  final DiacOpts opts;
+  final PackageInfo packageInfo;
+  final Map<String, String> headers;
+
+  Client _client;
+  Uri _endpointUri;
+
+  Future<Uri> _uri(List<String> path,
+      {Map<String, String> queryParameters}) async {
+    _endpointUri ??= Uri.parse(opts.endpointUrl);
+    return _endpointUri.replace(
+        pathSegments: _endpointUri.pathSegments + path,
+        queryParameters: queryParameters);
+  }
+
+  Map<String, String> _toQueryParameters(PackageInfo packageInfo) {
+    return <String, String>{
+      'package': packageInfo.packageName,
+      'platform': _operatingSystem(),
+    };
+  }
+
+  String _toUserAgent(PackageInfo packageInfo) {
+    return 'diac (${_operatingSystem()}, '
+        '${packageInfo.packageName}'
+        '@${packageInfo.version}+${packageInfo.buildNumber})';
+  }
+
+  Future<DiacConfig> fetchConfig() async {
+    final uri = await _uri(['messages.json'],
+        queryParameters: _toQueryParameters(packageInfo));
+    try {
+      _client ??= opts.httpClient();
+      _logger.finest('loading $uri with $_client');
+      final response = await _client.post(uri, headers: {
+        'User-Agent': _toUserAgent(packageInfo),
+        ...?headers,
+      });
+      final type = response.statusCode ~/ 100;
+      if (type != 2) {
+        _logger.fine('Error while loading diac config. ${response.statusCode}'
+            ' - ${response.body}');
+        return null;
+      }
+      _logger.finest('Got response ${response.statusCode},'
+          ' ${response.body.length}');
+      return DiacConfig.fromJson(
+        json.decode(response.body) as Map<String, dynamic>,
+      );
+    } catch (e, stackTrace) {
+      _logger.warning(
+          'Error while fetching configuration from $uri', e, stackTrace);
+      rethrow;
+    }
+  }
 }
 
 class DiacClient {
@@ -51,6 +129,7 @@ class DiacClient {
       : store = SimpleJsonPersistence.getForTypeSync(
           (data) => DiacData.fromJson(data),
           defaultCreator: () => DiacData(
+            deviceId: Uuid().v4(),
             firstLaunch: clock.now().toUtc(),
             seen: [],
             lastConfig: opts.initialConfig,
@@ -59,6 +138,7 @@ class DiacClient {
         ) {
     var coldStart = true;
     store.onValueChangedAndLoad.listen((event) async {
+      _logger.finer('got data event $event');
       final interval =
           coldStart ? opts.refetchIntervalCold : opts.refetchInterval;
       coldStart = false;
@@ -77,48 +157,23 @@ class DiacClient {
     });
   }
 
-  Client _client;
+  @visibleForTesting
+  DiacApi api;
 
   DiacOpts opts;
 
   final SimpleJsonPersistence<DiacData> store;
-
-  Future<Uri> _uri(List<String> path,
-      {Map<String, String> queryParameters}) async {
-    final endpoint = Uri.parse(opts.endpointUrl);
-    final packageInfo = await getPackageInfo();
-    return endpoint.replace(
-        pathSegments: endpoint.pathSegments + path,
-        queryParameters: <String, String>{
-          'package': packageInfo.packageName,
-          'platform': Platform.operatingSystem,
-          ...?queryParameters,
-        });
-  }
 
   Future<DiacConfig> _fetchConfig() async {
     if (opts.disableConfigFetch) {
       _logger.finer('iac message fetching disabled.');
       return opts.initialConfig;
     }
-    final uri = await _uri(['messages.json']);
-    try {
-      _client ??= Client();
-      final response = await _client.get(uri);
-      final type = response.statusCode ~/ 100;
-      if (type != 2) {
-        _logger.fine('Error while loading diac config. ${response.statusCode}'
-            ' - ${response.body}');
-        return null;
-      }
-      return DiacConfig.fromJson(
-        json.decode(response.body) as Map<String, dynamic>,
-      );
-    } catch (e, stackTrace) {
-      _logger.warning(
-          'Error while fetching configuration from $uri', e, stackTrace);
-      rethrow;
-    }
+    final data = await store.load();
+    api ??= DiacApi(opts: opts, packageInfo: await getPackageInfo(), headers: {
+      'X-Device': data.deviceId,
+    });
+    return await api.fetchConfig();
   }
 
   Future<void> _reloadConfigFromServerFuture;
@@ -138,6 +193,7 @@ class DiacClient {
 
   Future<void> _updateConfig(DiacConfig config) async {
     await store.update((data) => data.copyWith(
+          deviceId: data.deviceId ?? Uuid().v4(),
           lastConfig: config,
           lastConfigFetchedAt: clock.now().toUtc(),
         ));

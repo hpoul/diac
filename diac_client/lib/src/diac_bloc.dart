@@ -70,6 +70,7 @@ class DiacBloc with StreamSubscriberBase {
   final DiacClient _client;
   final StreamController<DiacEvent> _events = StreamController.broadcast();
   Stream<_NewData> _seenMessages;
+
   Stream<DiacEvent> get events => _events.stream;
 
   /// callback to create additional context data when evaluating the
@@ -109,12 +110,13 @@ class DiacBloc with StreamSubscriberBase {
           final expr = Expression.parse(message.expression);
           const evaluator = MapAwareEvaluator();
           try {
+            final exprContext = await _createExpressionContext(data, context);
             final dynamic result = evaluator.eval(
               expr,
-              await _createExpressionContext(data, context),
+              exprContext,
             );
             _logger.finest('Evaluated expression ${message.expression} '
-                'with $context: $result');
+                'with $exprContext: $result');
             if (result is bool && !result) {
               continue;
             }

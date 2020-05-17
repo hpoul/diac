@@ -36,6 +36,8 @@ dev_dependencies:
   freezed: ^0.10.8
   json_serializable: ^3.3.0
   builder_static_text: ^0.0.1+2
+  mockito: ^4.1.1
+  fake_async: ^1.1.0
 
 
 # For information on the generic Dart part of this file, see the

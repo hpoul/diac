@@ -16,11 +16,13 @@ class _$DiacDataTearOff {
   const _$DiacDataTearOff();
 
   _DiacData call(
-      {@required DateTime firstLaunch,
+      {String deviceId,
+      @required DateTime firstLaunch,
       @required List<DiacHistory> seen,
       @required DateTime lastConfigFetchedAt,
       DiacConfig lastConfig}) {
     return _DiacData(
+      deviceId: deviceId,
       firstLaunch: firstLaunch,
       seen: seen,
       lastConfigFetchedAt: lastConfigFetchedAt,
@@ -33,6 +35,7 @@ class _$DiacDataTearOff {
 const $DiacData = _$DiacDataTearOff();
 
 mixin _$DiacData {
+  String get deviceId;
   DateTime get firstLaunch;
   List<DiacHistory> get seen;
   DateTime get lastConfigFetchedAt;
@@ -46,7 +49,8 @@ abstract class $DiacDataCopyWith<$Res> {
   factory $DiacDataCopyWith(DiacData value, $Res Function(DiacData) then) =
       _$DiacDataCopyWithImpl<$Res>;
   $Res call(
-      {DateTime firstLaunch,
+      {String deviceId,
+      DateTime firstLaunch,
       List<DiacHistory> seen,
       DateTime lastConfigFetchedAt,
       DiacConfig lastConfig});
@@ -63,12 +67,14 @@ class _$DiacDataCopyWithImpl<$Res> implements $DiacDataCopyWith<$Res> {
 
   @override
   $Res call({
+    Object deviceId = freezed,
     Object firstLaunch = freezed,
     Object seen = freezed,
     Object lastConfigFetchedAt = freezed,
     Object lastConfig = freezed,
   }) {
     return _then(_value.copyWith(
+      deviceId: deviceId == freezed ? _value.deviceId : deviceId as String,
       firstLaunch:
           firstLaunch == freezed ? _value.firstLaunch : firstLaunch as DateTime,
       seen: seen == freezed ? _value.seen : seen as List<DiacHistory>,
@@ -96,7 +102,8 @@ abstract class _$DiacDataCopyWith<$Res> implements $DiacDataCopyWith<$Res> {
       __$DiacDataCopyWithImpl<$Res>;
   @override
   $Res call(
-      {DateTime firstLaunch,
+      {String deviceId,
+      DateTime firstLaunch,
       List<DiacHistory> seen,
       DateTime lastConfigFetchedAt,
       DiacConfig lastConfig});
@@ -115,12 +122,14 @@ class __$DiacDataCopyWithImpl<$Res> extends _$DiacDataCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object deviceId = freezed,
     Object firstLaunch = freezed,
     Object seen = freezed,
     Object lastConfigFetchedAt = freezed,
     Object lastConfig = freezed,
   }) {
     return _then(_DiacData(
+      deviceId: deviceId == freezed ? _value.deviceId : deviceId as String,
       firstLaunch:
           firstLaunch == freezed ? _value.firstLaunch : firstLaunch as DateTime,
       seen: seen == freezed ? _value.seen : seen as List<DiacHistory>,
@@ -136,7 +145,8 @@ class __$DiacDataCopyWithImpl<$Res> extends _$DiacDataCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
   const _$_DiacData(
-      {@required this.firstLaunch,
+      {this.deviceId,
+      @required this.firstLaunch,
       @required this.seen,
       @required this.lastConfigFetchedAt,
       this.lastConfig})
@@ -148,6 +158,8 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
       _$_$_DiacDataFromJson(json);
 
   @override
+  final String deviceId;
+  @override
   final DateTime firstLaunch;
   @override
   final List<DiacHistory> seen;
@@ -158,7 +170,7 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'DiacData(firstLaunch: $firstLaunch, seen: $seen, lastConfigFetchedAt: $lastConfigFetchedAt, lastConfig: $lastConfig)';
+    return 'DiacData(deviceId: $deviceId, firstLaunch: $firstLaunch, seen: $seen, lastConfigFetchedAt: $lastConfigFetchedAt, lastConfig: $lastConfig)';
   }
 
   @override
@@ -166,6 +178,7 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'DiacData'))
+      ..add(DiagnosticsProperty('deviceId', deviceId))
       ..add(DiagnosticsProperty('firstLaunch', firstLaunch))
       ..add(DiagnosticsProperty('seen', seen))
       ..add(DiagnosticsProperty('lastConfigFetchedAt', lastConfigFetchedAt))
@@ -176,6 +189,9 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _DiacData &&
+            (identical(other.deviceId, deviceId) ||
+                const DeepCollectionEquality()
+                    .equals(other.deviceId, deviceId)) &&
             (identical(other.firstLaunch, firstLaunch) ||
                 const DeepCollectionEquality()
                     .equals(other.firstLaunch, firstLaunch)) &&
@@ -192,6 +208,7 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
   @override
   int get hashCode =>
       runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(deviceId) ^
       const DeepCollectionEquality().hash(firstLaunch) ^
       const DeepCollectionEquality().hash(seen) ^
       const DeepCollectionEquality().hash(lastConfigFetchedAt) ^
@@ -209,13 +226,16 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
 
 abstract class _DiacData implements DiacData {
   const factory _DiacData(
-      {@required DateTime firstLaunch,
+      {String deviceId,
+      @required DateTime firstLaunch,
       @required List<DiacHistory> seen,
       @required DateTime lastConfigFetchedAt,
       DiacConfig lastConfig}) = _$_DiacData;
 
   factory _DiacData.fromJson(Map<String, dynamic> json) = _$_DiacData.fromJson;
 
+  @override
+  String get deviceId;
   @override
   DateTime get firstLaunch;
   @override

@@ -1,11 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:clock/clock.dart';
 import 'package:diac_client/diac_client.dart';
+import 'package:diac_client/src/diac_client.dart';
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart';
+import 'package:http/testing.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
+import 'package:mockito/mockito.dart';
+import 'package:pedantic/pedantic.dart';
+import 'package:uuid/uuid.dart';
 
 final _logger = Logger('diac_client_test');
 
@@ -44,8 +52,67 @@ void main() {
         await _wait();
       }
     });
+    test('Test the expressions to make sure we get the message.', () async {
+      final diac = DiacBloc(
+        opts: DiacOpts(
+          endpointUrl: '',
+          disableConfigFetch: true,
+          initialConfig: DiacConfig(
+            updatedAt: clock.now().toUtc(),
+            messages: [
+              DiacMessage(
+                uuid: Uuid().v4(),
+                body: 'msg1',
+                key: 'msg1',
+                actions: [],
+                expression: 'test.value == "first" && user.days > -1',
+              ),
+            ],
+          ),
+        ),
+        contextBuilder: () async => {
+          'test': {'value': 'first'},
+        },
+      );
+      await expectLater(
+        diac.messageForLabel('x'),
+        emits(
+          predicate<DiacMessage>((val) => val.key == 'msg1'),
+        ),
+      );
+    });
+    test('Test there is only one request', () async {
+      final diacClient = DiacClient(opts: DiacOpts(endpointUrl: '?'));
+      final diacApi = MockDiacApi();
+      when(diacApi.fetchConfig()).thenAnswer((realInvocation) async {
+        _logger.fine('fetching config.');
+        await Future<void>.delayed(const Duration(milliseconds: 200));
+        return DiacConfig(updatedAt: clock.now().toUtc(), messages: []);
+      });
+      diacClient.api = diacApi;
+
+      final sub = diacClient.store.onValueChangedAndLoad.listen((event) {
+        _logger.finer('event: $event');
+      });
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await sub.cancel();
+      final sub2 = diacClient.store.onValueChangedAndLoad.listen((event) {
+        _logger.finer('event: $event');
+      });
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await sub2.cancel();
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      diacClient.store.onValueChangedAndLoad.listen((event) {
+        _logger.finer('event: $event');
+      });
+
+      verify(diacApi.fetchConfig());
+      verifyNoMoreInteractions(diacApi);
+    });
   });
 }
+
+class MockDiacApi extends Mock implements DiacApi {}
 
 class TestUtil {
   static Future<void> mockPathProvider() async {
@@ -63,6 +130,14 @@ class TestUtil {
         return directory.path;
       }
       return null;
+    });
+
+    const MethodChannel('plugins.flutter.io/package_info')
+        .setMockMethodCallHandler((call) async {
+      return {
+        'packageName': 'mock',
+        'buildNumber': '0',
+      };
     });
   }
 }
