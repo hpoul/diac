@@ -183,7 +183,9 @@ class DiacBloc with StreamSubscriberBase {
   Future<void> triggerAction(DiacEventTriggerCustom event) async {
     final uri = event.uri;
     if (uri.scheme == 'diac') {
-      final action = customActions[uri.host];
+      assert(uri.host == '');
+      final actionName = uri.pathSegments.first;
+      final action = customActions[actionName];
       if (action != null) {
         final result = await action(event);
         if (result != true) {
