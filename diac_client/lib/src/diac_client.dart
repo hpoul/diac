@@ -13,6 +13,31 @@ import 'package:uuid/uuid.dart';
 
 final _logger = Logger('diac.diac_client');
 
+class DiacPackageInfo {
+  const DiacPackageInfo({
+    @required this.appName,
+    @required this.packageName,
+    @required this.version,
+    @required this.buildNumber,
+  })  : assert(appName != null),
+        assert(packageName != null),
+        assert(version != null),
+        assert(buildNumber != null);
+
+  DiacPackageInfo.fromPackageInfo(PackageInfo pi)
+      : this(
+          appName: pi.appName,
+          packageName: pi.packageName,
+          version: pi.version,
+          buildNumber: pi.buildNumber,
+        );
+
+  final String appName;
+  final String packageName;
+  final String version;
+  final String buildNumber;
+}
+
 class DiacOpts {
   ///
   /// [initialConfig]: initial config used before first http request,
@@ -24,6 +49,7 @@ class DiacOpts {
     this.refetchInterval = const Duration(hours: 1),
     this.refetchIntervalCold = const Duration(hours: 1),
     this.httpClient = createClient,
+    this.packageInfo,
   })  : assert(endpointUrl != null),
         assert(disableConfigFetch != null),
         assert(refetchInterval != null),
@@ -52,9 +78,28 @@ class DiacOpts {
   /// How much time must have passed before fetching after a start of the app.
   final Duration refetchIntervalCold;
 
+  /// PackageInfo used to identify the current app/version.
+  /// If not defined flutter plugin `package_info` will be used.
+  final Future<DiacPackageInfo> Function() packageInfo;
+
   final Client Function() httpClient;
 
   static Client createClient() => Client();
+
+  Future<DiacPackageInfo> getPackageInfo() async {
+    if (packageInfo != null) {
+      return await packageInfo();
+    }
+    if (kIsWeb) {
+      return const DiacPackageInfo(
+        packageName: 'design.codeux.diac.web',
+        appName: 'Diac',
+        version: '1.0.0',
+        buildNumber: '0',
+      );
+    }
+    return DiacPackageInfo.fromPackageInfo(await PackageInfo.fromPlatform());
+  }
 }
 
 String _operatingSystem() => kIsWeb ? 'web' : Platform.operatingSystem;
@@ -68,7 +113,7 @@ class DiacApi {
         assert(packageInfo != null);
 
   final DiacOpts opts;
-  final PackageInfo packageInfo;
+  final DiacPackageInfo packageInfo;
   final Map<String, String> headers;
 
   Client _client;
@@ -82,14 +127,14 @@ class DiacApi {
         queryParameters: queryParameters);
   }
 
-  Map<String, String> _toQueryParameters(PackageInfo packageInfo) {
+  Map<String, String> _toQueryParameters(DiacPackageInfo packageInfo) {
     return <String, String>{
       'package': packageInfo.packageName,
       'platform': _operatingSystem(),
     };
   }
 
-  String _toUserAgent(PackageInfo packageInfo) {
+  String _toUserAgent(DiacPackageInfo packageInfo) {
     return 'diac (${_operatingSystem()}, '
         '${packageInfo.packageName}'
         '@${packageInfo.version}+${packageInfo.buildNumber})';
@@ -171,9 +216,13 @@ class DiacClient {
       return opts.initialConfig;
     }
     final data = await store.load();
-    api ??= DiacApi(opts: opts, packageInfo: await getPackageInfo(), headers: {
-      'X-Device': data.deviceId,
-    });
+    api ??= DiacApi(
+      opts: opts,
+      packageInfo: await opts.getPackageInfo(),
+      headers: {
+        'X-Device': data.deviceId,
+      },
+    );
     return await api.fetchConfig();
   }
 
@@ -198,17 +247,5 @@ class DiacClient {
           lastConfig: config,
           lastConfigFetchedAt: clock.now().toUtc(),
         ));
-  }
-
-  static Future<PackageInfo> getPackageInfo() async {
-    if (kIsWeb) {
-      return PackageInfo(
-        packageName: 'design.codeux.diac.web',
-        appName: 'Diac',
-        version: '1.0.0',
-        buildNumber: '0',
-      );
-    }
-    return await PackageInfo.fromPlatform();
   }
 }

@@ -155,7 +155,7 @@ class DiacBloc with StreamSubscriberBase {
     assert(data != null);
     assert(context != null);
     final days = data.firstLaunch.difference(clock.now()).abs().inDays;
-    final pi = await DiacClient.getPackageInfo();
+    final pi = await _client.opts.getPackageInfo();
     return {
       'user': {
         'days': days,
