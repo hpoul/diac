@@ -194,7 +194,7 @@ class DiacBloc with StreamSubscriberBase {
           expressionContext: message.expressionContext);
       _logger.finer('action expression result: ${result.runtimeType}: $result');
       if (result is Uri) {
-        uri = uri;
+        uri = result;
       } else if (result is String) {
         uri = Uri.tryParse(result);
       } else {
@@ -218,17 +218,18 @@ class DiacBloc with StreamSubscriberBase {
   Future<Object> _evaluateMessageAction(
       {String expression, Map<String, dynamic> expressionContext}) async {
     try {
-      final expr = Expression.parse(expression);
+      final expr = Expression.parse(expression.trim());
       const evaluator = MapAwareEvaluator();
       final exprContext = <String, dynamic>{
         ...expressionContext,
-        'url': (String baseUri, Map<String, dynamic> queryParameters) {
+        'url': (String baseUri, Map<dynamic, dynamic> queryParameters) {
           final uri = Uri.parse(baseUri);
-          uri.replace(queryParameters: <String, dynamic>{
+          return uri.replace(queryParameters: <String, dynamic>{
             ...?uri.queryParametersAll,
-            ...?queryParameters,
+            ...?queryParameters.map<String, dynamic>(
+                (dynamic key, dynamic value) =>
+                    MapEntry<String, dynamic>(key.toString(), value)),
           });
-          return uri;
         },
       };
       final dynamic result = evaluator.eval(
@@ -260,7 +261,7 @@ class DiacBloc with StreamSubscriberBase {
       publishEvent(event);
     } else {
       if (!await launch(
-        event.action.url,
+        uri.toString(),
         forceSafariVC: false,
         forceWebView: false,
       )) {

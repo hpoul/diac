@@ -10,13 +10,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 import 'package:uuid/uuid.dart';
 
 final _logger = Logger('diac.diac_client_test');
 
+class UrlLauncherPlatformMock extends Mock
+    with MockPlatformInterfaceMixin
+    implements UrlLauncherPlatform {}
+
 void main() {
   Logger.root.level = Level.ALL;
   PrintAppender().attachToLogger(Logger.root);
+
+  UrlLauncherPlatformMock urlLauncher;
 
   setUpAll(() async {
     await TestUtil.mockPathProvider();
@@ -27,6 +35,7 @@ void main() {
     await c.dispose();
     await c.store.delete();
     await c.store.dispose();
+    UrlLauncherPlatform.instance = urlLauncher = UrlLauncherPlatformMock();
   });
 
   Future<void> _wait() async =>
@@ -116,6 +125,62 @@ void main() {
       verify(diacApi.fetchConfig());
       verifyNoMoreInteractions(diacApi);
       await diacClient.dispose();
+    });
+    test('action expression', () async {
+      // ignore: missing_required_param
+      when(urlLauncher.launch(any,
+              useSafariVC: anyNamed('useSafariVC'),
+              useWebView: anyNamed('useWebView'),
+              enableJavaScript: anyNamed('enableJavaScript'),
+              enableDomStorage: anyNamed('enableDomStorage'),
+              universalLinksOnly: anyNamed('universalLinksOnly'),
+              headers: anyNamed('headers')))
+          .thenAnswer((realInvocation) async => true);
+      final diac = DiacBloc(
+        opts: DiacOpts(
+          endpointUrl: '',
+          disableConfigFetch: true,
+          initialConfig: DiacConfig(
+            updatedAt: clock.now().toUtc(),
+            messages: [
+              DiacMessage(
+                uuid: Uuid().v4(),
+                body: 'msg1',
+                key: 'msg1',
+                actions: [
+                  const DiacMessageAction(
+                    key: 'x',
+                    label: 'x',
+                    expression: '''
+                    url("https://authpass.app/page", {
+                      "testValue": test.value
+                    })
+                    ''',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        contextBuilder: () async => {
+          'test': {'value': 'first'},
+        },
+      );
+      final message = await diac.messageForLabel('x').first;
+      await diac.triggerMessageAction(
+          message: message, action: message.message.actions[0]);
+      final args = verify(urlLauncher.launch(captureAny,
+              useSafariVC: anyNamed('useSafariVC'),
+              useWebView: anyNamed('useWebView'),
+              enableJavaScript: anyNamed('enableJavaScript'),
+              enableDomStorage: anyNamed('enableDomStorage'),
+              universalLinksOnly: anyNamed('universalLinksOnly'),
+              headers: anyNamed('headers')))
+          .captured;
+      final uri = args[0] as String;
+      expect(uri, isNotNull);
+      expect(uri, 'https://authpass.app/page?testValue=first');
+      diac.dispose();
     });
   });
 }
