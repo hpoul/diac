@@ -419,11 +419,15 @@ class _$DiacMessageActionTearOff {
   const _$DiacMessageActionTearOff();
 
   _DiacMessageAction call(
-      {@required String key, @required String label, String url}) {
+      {@required String key,
+      @required String label,
+      String url,
+      String expression}) {
     return _DiacMessageAction(
       key: key,
       label: label,
       url: url,
+      expression: expression,
     );
   }
 }
@@ -435,6 +439,7 @@ mixin _$DiacMessageAction {
   String get key;
   String get label;
   String get url;
+  String get expression;
 
   Map<String, dynamic> toJson();
   $DiacMessageActionCopyWith<DiacMessageAction> get copyWith;
@@ -444,7 +449,7 @@ abstract class $DiacMessageActionCopyWith<$Res> {
   factory $DiacMessageActionCopyWith(
           DiacMessageAction value, $Res Function(DiacMessageAction) then) =
       _$DiacMessageActionCopyWithImpl<$Res>;
-  $Res call({String key, String label, String url});
+  $Res call({String key, String label, String url, String expression});
 }
 
 class _$DiacMessageActionCopyWithImpl<$Res>
@@ -460,11 +465,14 @@ class _$DiacMessageActionCopyWithImpl<$Res>
     Object key = freezed,
     Object label = freezed,
     Object url = freezed,
+    Object expression = freezed,
   }) {
     return _then(_value.copyWith(
       key: key == freezed ? _value.key : key as String,
       label: label == freezed ? _value.label : label as String,
       url: url == freezed ? _value.url : url as String,
+      expression:
+          expression == freezed ? _value.expression : expression as String,
     ));
   }
 }
@@ -475,7 +483,7 @@ abstract class _$DiacMessageActionCopyWith<$Res>
           _DiacMessageAction value, $Res Function(_DiacMessageAction) then) =
       __$DiacMessageActionCopyWithImpl<$Res>;
   @override
-  $Res call({String key, String label, String url});
+  $Res call({String key, String label, String url, String expression});
 }
 
 class __$DiacMessageActionCopyWithImpl<$Res>
@@ -493,11 +501,14 @@ class __$DiacMessageActionCopyWithImpl<$Res>
     Object key = freezed,
     Object label = freezed,
     Object url = freezed,
+    Object expression = freezed,
   }) {
     return _then(_DiacMessageAction(
       key: key == freezed ? _value.key : key as String,
       label: label == freezed ? _value.label : label as String,
       url: url == freezed ? _value.url : url as String,
+      expression:
+          expression == freezed ? _value.expression : expression as String,
     ));
   }
 }
@@ -505,7 +516,7 @@ class __$DiacMessageActionCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_DiacMessageAction implements _DiacMessageAction {
   const _$_DiacMessageAction(
-      {@required this.key, @required this.label, this.url})
+      {@required this.key, @required this.label, this.url, this.expression})
       : assert(key != null),
         assert(label != null);
 
@@ -518,10 +529,12 @@ class _$_DiacMessageAction implements _DiacMessageAction {
   final String label;
   @override
   final String url;
+  @override
+  final String expression;
 
   @override
   String toString() {
-    return 'DiacMessageAction(key: $key, label: $label, url: $url)';
+    return 'DiacMessageAction(key: $key, label: $label, url: $url, expression: $expression)';
   }
 
   @override
@@ -533,7 +546,10 @@ class _$_DiacMessageAction implements _DiacMessageAction {
             (identical(other.label, label) ||
                 const DeepCollectionEquality().equals(other.label, label)) &&
             (identical(other.url, url) ||
-                const DeepCollectionEquality().equals(other.url, url)));
+                const DeepCollectionEquality().equals(other.url, url)) &&
+            (identical(other.expression, expression) ||
+                const DeepCollectionEquality()
+                    .equals(other.expression, expression)));
   }
 
   @override
@@ -541,7 +557,8 @@ class _$_DiacMessageAction implements _DiacMessageAction {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(key) ^
       const DeepCollectionEquality().hash(label) ^
-      const DeepCollectionEquality().hash(url);
+      const DeepCollectionEquality().hash(url) ^
+      const DeepCollectionEquality().hash(expression);
 
   @override
   _$DiacMessageActionCopyWith<_DiacMessageAction> get copyWith =>
@@ -557,7 +574,8 @@ abstract class _DiacMessageAction implements DiacMessageAction {
   const factory _DiacMessageAction(
       {@required String key,
       @required String label,
-      String url}) = _$_DiacMessageAction;
+      String url,
+      String expression}) = _$_DiacMessageAction;
 
   factory _DiacMessageAction.fromJson(Map<String, dynamic> json) =
       _$_DiacMessageAction.fromJson;
@@ -568,6 +586,8 @@ abstract class _DiacMessageAction implements DiacMessageAction {
   String get label;
   @override
   String get url;
+  @override
+  String get expression;
   @override
   _$DiacMessageActionCopyWith<_DiacMessageAction> get copyWith;
 }

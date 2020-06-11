@@ -30,7 +30,7 @@ class DiacMaterialBanner extends StatefulWidget {
 class _DiacMaterialBannerState extends State<DiacMaterialBanner> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DiacMessage>(
+    return StreamBuilder<DiacMessageDisplay>(
       stream: widget.diac.messageForLabel(widget.label),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -40,7 +40,8 @@ class _DiacMaterialBannerState extends State<DiacMaterialBanner> {
         if (!snapshot.hasData) {
           return const SizedBox();
         }
-        final msg = snapshot.data;
+        final message = snapshot.data;
+        final msg = message.message;
 
         widget.diac.publishEvent(
           DiacEvent(type: DiacEventType.shown, message: msg),
@@ -57,15 +58,8 @@ class _DiacMaterialBannerState extends State<DiacMaterialBanner> {
                   (action) => FlatButton(
                     child: Text(action.label),
                     onPressed: () async {
-                      if (action.url != null) {
-                        await widget.diac.triggerAction(DiacEventTriggerCustom(
-                          message: msg,
-                          action: action,
-                          uri: Uri.parse(action.url),
-                        ));
-                      }
-                      widget.diac.publishEvent(
-                          DiacEventDismissed(message: msg, action: action));
+                      await widget.diac.triggerMessageAction(
+                          message: message, action: action);
                     },
                   ),
                 )

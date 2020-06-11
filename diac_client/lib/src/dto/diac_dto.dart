@@ -36,6 +36,9 @@ abstract class DiacMessageAction with _$DiacMessageAction {
     @required String key,
     @required String label,
     String url,
+
+    /// Expression which will be evaluated, if url is null.
+    String expression,
   }) = _DiacMessageAction;
 
   factory DiacMessageAction.fromJson(Map<String, dynamic> json) =>

@@ -82,9 +82,9 @@ class DiacBloc with StreamSubscriberBase {
   /// expression of [DiacMessage].
   final AdditionalContextBuilder contextBuilder;
 
-  final Map<String, ValueStream<DiacMessage>> _messageForLabel = {};
+  final Map<String, ValueStream<DiacMessageDisplay>> _messageForLabel = {};
 
-  Stream<DiacMessage> messageForLabel(String label) =>
+  Stream<DiacMessageDisplay> messageForLabel(String label) =>
       _messageForLabel[label] ??= _seenMessages
           .doOnData((event) {
             _logger.finer('messageForLabel - data: $event');
@@ -101,7 +101,7 @@ class DiacBloc with StreamSubscriberBase {
           .publishValueAsync()
           .autoConnect();
 
-  Future<DiacMessage> _findNextMessageFromData(
+  Future<DiacMessageDisplay> _findNextMessageFromData(
     DiacData data,
     Set<String> seenMessages,
     Map<String, Object> context,
@@ -109,6 +109,7 @@ class DiacBloc with StreamSubscriberBase {
     try {
       final now = clock.now();
       _logger.finest('Find next message. ${data.lastConfig.messages}');
+      final exprContext = await _createExpressionContext(data, context);
       for (final message in data.lastConfig.messages) {
         if (seenMessages.contains(message.uuid)) {
           _logger.finest('message was already seen ${message.uuid}');
@@ -121,7 +122,6 @@ class DiacBloc with StreamSubscriberBase {
           final expr = Expression.parse(message.expression);
           const evaluator = MapAwareEvaluator();
           try {
-            final exprContext = await _createExpressionContext(data, context);
             final dynamic result = evaluator.eval(
               expr,
               exprContext,
@@ -139,7 +139,10 @@ class DiacBloc with StreamSubscriberBase {
             continue;
           }
         }
-        return message;
+        return DiacMessageDisplay(
+          message: message,
+          expressionContext: exprContext,
+        );
       }
     } catch (e, stackTrace) {
       _logger.severe('Error while finding next message', e, stackTrace);
@@ -180,6 +183,66 @@ class DiacBloc with StreamSubscriberBase {
     };
   }
 
+  Future<void> triggerMessageAction({
+    @required DiacMessageDisplay message,
+    @required DiacMessageAction action,
+  }) async {
+    Uri uri;
+    if (action.expression != null) {
+      final result = await _evaluateMessageAction(
+          expression: action.expression,
+          expressionContext: message.expressionContext);
+      _logger.finer('action expression result: ${result.runtimeType}: $result');
+      if (result is Uri) {
+        uri = uri;
+      } else if (result is String) {
+        uri = Uri.tryParse(result);
+      } else {
+        _logger.warning('Unexpected expression result: '
+            '${result.runtimeType}: $result');
+      }
+    }
+    if (uri == null && action.url != null) {
+      uri = Uri.parse(action.url);
+    }
+    if (uri != null) {
+      await triggerAction(DiacEventTriggerCustom(
+        message: message.message,
+        action: action,
+        uri: uri,
+      ));
+    }
+    publishEvent(DiacEventDismissed(message: message.message, action: action));
+  }
+
+  Future<Object> _evaluateMessageAction(
+      {String expression, Map<String, dynamic> expressionContext}) async {
+    try {
+      final expr = Expression.parse(expression);
+      const evaluator = MapAwareEvaluator();
+      final exprContext = <String, dynamic>{
+        ...expressionContext,
+        'url': (String baseUri, Map<String, dynamic> queryParameters) {
+          final uri = Uri.parse(baseUri);
+          uri.replace(queryParameters: <String, dynamic>{
+            ...?uri.queryParametersAll,
+            ...?queryParameters,
+          });
+          return uri;
+        },
+      };
+      final dynamic result = evaluator.eval(
+        expr,
+        exprContext,
+      );
+      return result;
+    } catch (e, stackTrace) {
+      _logger.severe('Error while evaluating message action. {$expression}', e,
+          stackTrace);
+      return null;
+    }
+  }
+
   Future<void> triggerAction(DiacEventTriggerCustom event) async {
     final uri = event.uri;
     if (uri.scheme == 'diac') {
@@ -210,6 +273,7 @@ class DiacBloc with StreamSubscriberBase {
     _logger.fine('Disposing.');
     cancelSubscriptions();
     _messageForLabel.clear();
+    _client.dispose();
   }
 
   /// clears the persisted state and starts from scratch.
@@ -249,4 +313,13 @@ class MapAwareEvaluator extends ExpressionEvaluator {
           '${object.runtimeType} $object');
     }
   }
+}
+
+class DiacMessageDisplay {
+  DiacMessageDisplay({
+    @required this.message,
+    @required this.expressionContext,
+  }) : assert(message != null);
+  final DiacMessage message;
+  final Map<String, dynamic> expressionContext;
 }

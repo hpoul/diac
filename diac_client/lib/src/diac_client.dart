@@ -5,6 +5,7 @@ import 'package:clock/clock.dart';
 import 'package:diac_client/src/dto/diac_dto.dart';
 import 'package:diac_client/src/dto/diac_store.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_async_utils/flutter_async_utils.dart';
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info/package_info.dart';
@@ -170,7 +171,7 @@ class DiacApi {
   }
 }
 
-class DiacClient {
+class DiacClient with StreamSubscriberBase {
   DiacClient({this.opts})
       : store = SimpleJsonPersistence.getForTypeSync(
           (data) => DiacData.fromJson(data),
@@ -183,7 +184,7 @@ class DiacClient {
           ),
         ) {
     var coldStart = true;
-    store.onValueChangedAndLoad.listen((event) async {
+    handle(store.onValueChangedAndLoad.listen((event) async {
       _logger.finer('got data event $event');
       final interval =
           coldStart ? opts.refetchIntervalCold : opts.refetchInterval;
@@ -200,7 +201,7 @@ class DiacClient {
           opts.initialConfig.updatedAt.isAfter(event.lastConfig.updatedAt)) {
         await _updateConfig(opts.initialConfig);
       }
-    });
+    }));
   }
 
   @visibleForTesting
@@ -247,5 +248,9 @@ class DiacClient {
           lastConfig: config,
           lastConfigFetchedAt: clock.now().toUtc(),
         ));
+  }
+
+  Future<void> dispose() async {
+    cancelSubscriptions();
   }
 }

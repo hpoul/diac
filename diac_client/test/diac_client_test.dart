@@ -3,16 +3,13 @@ import 'dart:io';
 
 import 'package:clock/clock.dart';
 import 'package:diac_client/diac_client.dart';
+import 'package:diac_client/src/diac_bloc.dart';
 import 'package:diac_client/src/diac_client.dart';
-import 'package:fake_async/fake_async.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart';
-import 'package:http/testing.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:uuid/uuid.dart';
 
 final _logger = Logger('diac.diac_client_test');
@@ -23,6 +20,13 @@ void main() {
 
   setUpAll(() async {
     await TestUtil.mockPathProvider();
+  });
+  setUp(() async {
+    // at the start of every test, clear storage.
+    final c = DiacClient(opts: DiacOpts(endpointUrl: ''));
+    await c.dispose();
+    await c.store.delete();
+    await c.store.dispose();
   });
 
   Future<void> _wait() async =>
@@ -51,8 +55,10 @@ void main() {
         await subscription.cancel();
         await _wait();
       }
+      diac.dispose();
     });
     test('Test the expressions to make sure we get the message.', () async {
+      _logger.info('====================');
       final diac = DiacBloc(
         opts: DiacOpts(
           endpointUrl: '',
@@ -77,9 +83,10 @@ void main() {
       await expectLater(
         diac.messageForLabel('x'),
         emits(
-          predicate<DiacMessage>((val) => val.key == 'msg1'),
+          predicate<DiacMessageDisplay>((val) => val.message.key == 'msg1'),
         ),
       );
+      diac.dispose();
     });
     test('Test there is only one request', () async {
       final diacClient = DiacClient(opts: DiacOpts(endpointUrl: '?'));
@@ -108,6 +115,7 @@ void main() {
 
       verify(diacApi.fetchConfig());
       verifyNoMoreInteractions(diacApi);
+      await diacClient.dispose();
     });
   });
 }
@@ -135,7 +143,9 @@ class TestUtil {
     const MethodChannel('plugins.flutter.io/package_info')
         .setMockMethodCallHandler((call) async {
       return {
-        'packageName': 'mock',
+        'appName': 'testDiac',
+        'packageName': 'design.codeux.diac.test',
+        'version': '0.0.1',
         'buildNumber': '0',
       };
     });

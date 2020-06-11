@@ -60,6 +60,7 @@ _$_DiacMessageAction _$_$_DiacMessageActionFromJson(Map<String, dynamic> json) {
     key: json['key'] as String,
     label: json['label'] as String,
     url: json['url'] as String,
+    expression: json['expression'] as String,
   );
 }
 
@@ -69,6 +70,7 @@ Map<String, dynamic> _$_$_DiacMessageActionToJson(
       'key': instance.key,
       'label': instance.label,
       'url': instance.url,
+      'expression': instance.expression,
     };
 
 // **************************************************************************
