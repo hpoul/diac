@@ -215,6 +215,13 @@ class DiacBloc with StreamSubscriberBase {
     publishEvent(DiacEventDismissed(message: message.message, action: action));
   }
 
+  dynamic _asStringOrIterable(dynamic value) {
+    if (value is Iterable) {
+      return value.map<dynamic>(_asStringOrIterable);
+    }
+    return value?.toString();
+  }
+
   Future<Object> _evaluateMessageAction(
       {String expression, Map<String, dynamic> expressionContext}) async {
     try {
@@ -227,8 +234,8 @@ class DiacBloc with StreamSubscriberBase {
           return uri.replace(queryParameters: <String, dynamic>{
             ...?uri.queryParametersAll,
             ...?queryParameters.map<String, dynamic>(
-                (dynamic key, dynamic value) =>
-                    MapEntry<String, dynamic>(key.toString(), value)),
+                (dynamic key, dynamic value) => MapEntry<String, dynamic>(
+                    key.toString(), _asStringOrIterable(value))),
           });
         },
       };

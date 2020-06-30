@@ -153,7 +153,8 @@ void main() {
                     label: 'x',
                     expression: '''
                     url("https://authpass.app/page", {
-                      "testValue": test.value
+                      "testValue": test.value,
+                      "nextValue": test.intvalue
                     })
                     ''',
                   ),
@@ -163,7 +164,7 @@ void main() {
           ),
         ),
         contextBuilder: () async => {
-          'test': {'value': 'first'},
+          'test': {'value': 'first', 'intvalue': 5},
         },
       );
       final message = await diac.messageForLabel('x').first;
@@ -179,7 +180,7 @@ void main() {
           .captured;
       final uri = args[0] as String;
       expect(uri, isNotNull);
-      expect(uri, 'https://authpass.app/page?testValue=first');
+      expect(uri, 'https://authpass.app/page?testValue=first&nextValue=5');
       diac.dispose();
     });
   });
