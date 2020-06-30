@@ -3,18 +3,18 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/fonts/MaterialIcons-Regular.ttf": "56d3ffdef7a25659eab6a68a3fbfaf16",
-"assets/NOTICES": "17b11dcd885bf16a1322d171884a511a",
+  "main.dart.js": "90121b4258f03b657dae1f77bedf5ada",
+"favicon.png": "5dcef449791fa27946b3d35ad8803796",
+"manifest.json": "15f73b7e8a8209c2206210b3ac8dea1b",
+"assets/fonts/MaterialIcons-Regular.ttf": "56d3ffdef7a25659eab6a68a3fbfaf16",
 "assets/FontManifest.json": "01700ba55b08a6141f33e168c4a6c22f",
+"assets/NOTICES": "d0d893afa0faaa1dbeae5055367153eb",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "115e937bb829a890521f72d2e664b632",
 "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
-"main.dart.js": "36045e19e9b89bf89687a55723fcdbda",
-"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"manifest.json": "15f73b7e8a8209c2206210b3ac8dea1b",
+"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "index.html": "926cd8008bef60a4e735ba8d18fbac9c",
-"/": "926cd8008bef60a4e735ba8d18fbac9c",
-"favicon.png": "5dcef449791fa27946b3d35ad8803796"
+"/": "926cd8008bef60a4e735ba8d18fbac9c"
 };
 
 // The application shell files that are downloaded before a service worker can
@@ -23,7 +23,7 @@ const CORE = [
   "/",
 "main.dart.js",
 "index.html",
-"assets/LICENSE",
+"assets/NOTICES",
 "assets/AssetManifest.json",
 "assets/FontManifest.json"];
 
@@ -128,7 +128,7 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener('message', (event) => {
   // SkipWaiting can be used to immediately activate a waiting service worker.
   // This will also require a page refresh triggered by the main worker.
-  if (event.message == 'skipWaiting') {
+  if (event.data == 'skipWaiting') {
     return self.skipWaiting();
   }
 
@@ -152,8 +152,8 @@ async function downloadOffline() {
   }
   for (var resourceKey in Object.keys(RESOURCES)) {
     if (!currentContent[resourceKey]) {
-      resources.add(resourceKey);
+      resources.push(resourceKey);
     }
   }
-  return Cache.addAll(resources);
+  return contentCache.addAll(resources);
 }
