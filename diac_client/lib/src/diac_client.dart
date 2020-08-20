@@ -190,7 +190,7 @@ class DiacClient with StreamSubscriberBase {
           coldStart ? opts.refetchIntervalCold : opts.refetchInterval;
       coldStart = false;
       if (event.lastConfig == null || event.lastConfigFetchedAt == null) {
-        _logger.fine('Never fetched configure before, reloading');
+        _logger.fine('Never fetched config before, reloading');
         await reloadConfigFromServer();
       } else if (event.lastConfigFetchedAt.difference(clock.now()).abs() >
           interval) {
@@ -235,11 +235,19 @@ class DiacClient with StreamSubscriberBase {
   }
 
   Future<void> _reloadConfigFromServerNow() async {
-    final config = await _fetchConfig();
-    if (config == null) {
-      return;
+    try {
+      final config = await _fetchConfig();
+      if (config == null) {
+        return;
+      }
+      await _updateConfig(config);
+    } catch (error, stackTrace) {
+      _logger.warning(
+        'Error while loading config. Silently ignore it.',
+        error,
+        stackTrace,
+      );
     }
-    await _updateConfig(config);
   }
 
   Future<void> _updateConfig(DiacConfig config) async {
