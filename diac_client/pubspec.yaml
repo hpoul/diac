@@ -12,34 +12,33 @@ dependencies:
   pedantic: ">=1.8.0 <2.0.0"
   clock: ">=1.0.0 <2.0.0"
   freezed_annotation: ">=0.7.1 <1.0.0"
-  json_annotation: ">=3.0.0 <4.0.0"
+  json_annotation: ">=3.0.0 <5.0.0"
   http: ">=0.12.1 <1.0.0"
   logging: ">=0.11.0 <1.0.0"
   flutter_async_utils: ">=0.0.1 <1.0.0"
   rxdart: ">=0.24.0 <1.0.0"
   expressions: ">=0.1.5 <1.0.0"
-  uuid: ">=2.0.0 <3.0.0"
+  uuid: ">=2.0.0 <4.0.0"
   # for the bin/ dart file
   logging_appenders: ">=0.4.0 <2.0.0"
 
   ######################
   #### plugin dependencies (with native code)
-  package_info: ">=0.4.0+18 <2.0.0"
-  url_launcher: ">=5.4.7 <6.0.0"
+  package_info: ">=0.4.0+18 <3.0.0"
+  url_launcher: ">=5.4.7 <7.0.0"
   # (depends on path_provider)
-  simple_json_persistence: ">=1.0.0 <2.0.0"
+  simple_json_persistence: ">=1.0.0 <3.0.0"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^1.10.0
-  freezed: ^0.10.8
-  json_serializable: ^3.3.0
+  build_runner: ^1.11.5
+  freezed: ^0.14.0+1
+  json_serializable: ^4.0.2
   builder_static_text: ^0.0.1+2
-  mockito: ^4.1.1
-  fake_async: ^1.1.0
-  plugin_platform_interface: ^1.0.2
-  url_launcher_platform_interface: ^1.0.7
+  mockito: ^5.0.0
+  fake_async: ^1.2.0
+  plugin_platform_interface: ^2.0.0
 
 
 # For information on the generic Dart part of this file, see the
