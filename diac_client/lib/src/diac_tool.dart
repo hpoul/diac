@@ -35,7 +35,7 @@ class DiacTool {
                       orElse: () => msg)
                   .uuid))
           .toList();
-      final newConfig = config.copyWith(
+      final DiacConfig? newConfig = config.copyWith(
         updatedAt: clock.now().toUtc(),
         messages: newMessages,
       );
@@ -47,7 +47,7 @@ class DiacTool {
     }
   }
 
-  Future<DiacConfig> _readConfig(File file) async {
+  Future<DiacConfig?> _readConfig(File file) async {
     if (!file.existsSync()) {
       return null;
     }

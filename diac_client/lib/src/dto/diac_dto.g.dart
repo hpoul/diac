@@ -11,10 +11,10 @@ _$_DiacConfig _$_$_DiacConfigFromJson(Map<String, dynamic> json) {
     updatedAt: json['updatedAt'] == null
         ? null
         : DateTime.parse(json['updatedAt'] as String),
-    messages: (json['messages'] as List)
-        ?.map((e) =>
+    (messages: (json['messages'] as List?)
+        ?.map((dynamic e) =>
             e == null ? null : DiacMessage.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        ?.toList())!,
   );
 }
 
@@ -35,12 +35,12 @@ _$_DiacMessage _$_$_DiacMessageFromJson(Map<String, dynamic> json) {
     dateEnd: json['dateEnd'] == null
         ? null
         : DateTime.parse(json['dateEnd'] as String),
-    expression: json['expression'] as String,
-    actions: (json['actions'] as List)
-        ?.map((e) => e == null
+    expression: json['expression'] as String?,
+    (actions: (json['actions'] as List?)
+        ?.map((dynamic e) => e == null
             ? null
             : DiacMessageAction.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        ?.toList())!,
   );
 }
 
@@ -59,8 +59,8 @@ _$_DiacMessageAction _$_$_DiacMessageActionFromJson(Map<String, dynamic> json) {
   return _$_DiacMessageAction(
     key: json['key'] as String,
     label: json['label'] as String,
-    url: json['url'] as String,
-    expression: json['expression'] as String,
+    url: json['url'] as String?,
+    expression: json['expression'] as String?,
   );
 }
 

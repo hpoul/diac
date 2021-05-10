@@ -24,7 +24,7 @@ void main() {
   Logger.root.level = Level.ALL;
   PrintAppender().attachToLogger(Logger.root);
 
-  UrlLauncherPlatformMock urlLauncher;
+  late UrlLauncherPlatformMock urlLauncher;
 
   setUpAll(() async {
     await TestUtil.mockPathProvider();
@@ -128,13 +128,13 @@ void main() {
     });
     test('action expression', () async {
       // ignore: missing_required_param
-      when(urlLauncher.launch(any,
-              useSafariVC: anyNamed('useSafariVC'),
-              useWebView: anyNamed('useWebView'),
-              enableJavaScript: anyNamed('enableJavaScript'),
-              enableDomStorage: anyNamed('enableDomStorage'),
-              universalLinksOnly: anyNamed('universalLinksOnly'),
-              headers: anyNamed('headers')))
+      when(urlLauncher.launch(any!,
+              useSafariVC: anyNamed('useSafariVC')!,
+              useWebView: anyNamed('useWebView')!,
+              enableJavaScript: anyNamed('enableJavaScript')!,
+              enableDomStorage: anyNamed('enableDomStorage')!,
+              universalLinksOnly: anyNamed('universalLinksOnly')!,
+              headers: anyNamed('headers')!))
           .thenAnswer((realInvocation) async => true);
       final diac = DiacBloc(
         opts: DiacOpts(
@@ -170,15 +170,15 @@ void main() {
       final message = await diac.messageForLabel('x').first;
       await diac.triggerMessageAction(
           message: message, action: message.message.actions[0]);
-      final args = verify(urlLauncher.launch(captureAny,
-              useSafariVC: anyNamed('useSafariVC'),
-              useWebView: anyNamed('useWebView'),
-              enableJavaScript: anyNamed('enableJavaScript'),
-              enableDomStorage: anyNamed('enableDomStorage'),
-              universalLinksOnly: anyNamed('universalLinksOnly'),
-              headers: anyNamed('headers')))
+      final args = verify(urlLauncher.launch(captureAny!,
+              useSafariVC: anyNamed('useSafariVC')!,
+              useWebView: anyNamed('useWebView')!,
+              enableJavaScript: anyNamed('enableJavaScript')!,
+              enableDomStorage: anyNamed('enableDomStorage')!,
+              universalLinksOnly: anyNamed('universalLinksOnly')!,
+              headers: anyNamed('headers')!))
           .captured;
-      final uri = args[0] as String;
+      final uri = args[0] as String?;
       expect(uri, isNotNull);
       expect(uri, 'https://authpass.app/page?testValue=first&nextValue=5');
       diac.dispose();

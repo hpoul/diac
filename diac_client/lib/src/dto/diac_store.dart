@@ -12,11 +12,11 @@ abstract class DiacData with _$DiacData implements HasToJson {
   const factory DiacData({
     /// Once everything is migrated, make this a required field.
     /// (Uuid to uniquely identify this device).
-    /*@required*/ String deviceId,
-    @required DateTime firstLaunch,
-    @required List<DiacHistory> seen,
-    @required DateTime lastConfigFetchedAt,
-    DiacConfig lastConfig,
+    /*@required*/ String? deviceId,
+    required DateTime firstLaunch,
+    required List<DiacHistory> seen,
+    required DateTime lastConfigFetchedAt,
+    DiacConfig? lastConfig,
   }) = _DiacData;
 
   factory DiacData.fromJson(Map<String, dynamic> json) =>
@@ -26,12 +26,12 @@ abstract class DiacData with _$DiacData implements HasToJson {
 @freezed
 abstract class DiacHistory with _$DiacHistory {
   const factory DiacHistory({
-    @JsonKey(name: 'id') @required String messageUuid,
-    @JsonKey(name: 'key') @required String messageKey,
-    DateTime closedAt,
+    @JsonKey(name: 'id') required String messageUuid,
+    @JsonKey(name: 'key') required String messageKey,
+    DateTime? closedAt,
 
     /// tapped action of that message.
-    String action,
+    String? action,
   }) = _DiacHistory;
 
   factory DiacHistory.fromJson(Map<String, dynamic> json) =>

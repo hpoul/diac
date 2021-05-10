@@ -6,8 +6,8 @@ part 'diac_dto.freezed.dart';
 @freezed
 abstract class DiacConfig with _$DiacConfig {
   const factory DiacConfig({
-    @required DateTime updatedAt,
-    @required List<DiacMessage> messages,
+    required DateTime updatedAt,
+    required List<DiacMessage> messages,
   }) = _DiacConfig;
 
   factory DiacConfig.fromJson(Map<String, dynamic> json) =>
@@ -17,13 +17,13 @@ abstract class DiacConfig with _$DiacConfig {
 @freezed
 abstract class DiacMessage with _$DiacMessage {
   const factory DiacMessage({
-    @required String uuid,
-    @required String body,
-    @required String key,
-    DateTime dateStart,
-    DateTime dateEnd,
-    String expression,
-    @required List<DiacMessageAction> actions,
+    required String uuid,
+    required String body,
+    required String key,
+    DateTime? dateStart,
+    DateTime? dateEnd,
+    String? expression,
+    required List<DiacMessageAction> actions,
   }) = _DiacMessage;
 
   factory DiacMessage.fromJson(Map<String, dynamic> json) =>
@@ -33,12 +33,12 @@ abstract class DiacMessage with _$DiacMessage {
 @freezed
 abstract class DiacMessageAction with _$DiacMessageAction {
   const factory DiacMessageAction({
-    @required String key,
-    @required String label,
-    String url,
+    required String key,
+    required String label,
+    String? url,
 
     /// Expression which will be evaluated, if url is null.
-    String expression,
+    String? expression,
   }) = _DiacMessageAction;
 
   factory DiacMessageAction.fromJson(Map<String, dynamic> json) =>

@@ -1,5 +1,4 @@
 import 'package:diac_client/src/dto/diac_dto.dart';
-import 'package:flutter/foundation.dart';
 
 enum DiacEventType {
   shown,
@@ -12,9 +11,7 @@ extension DiacEventTypeToString on DiacEventType {
 }
 
 class DiacEvent {
-  DiacEvent({@required this.type, @required this.message})
-      : assert(type != null),
-        assert(message != null);
+  DiacEvent({required this.type, required this.message});
 
   final DiacEventType type;
   final DiacMessage message;
@@ -26,17 +23,15 @@ class DiacEvent {
 }
 
 abstract class DiacEventWithAction implements DiacEvent {
-  DiacMessageAction get action;
+  DiacMessageAction? get action;
 }
 
 class DiacEventTriggerCustom extends DiacEvent implements DiacEventWithAction {
   DiacEventTriggerCustom({
-    @required DiacMessage message,
-    @required this.action,
-    @required this.uri,
-  })  : assert(uri != null),
-        assert(action != null),
-        super(type: DiacEventType.dismissed, message: message);
+    required DiacMessage message,
+    required this.action,
+    required this.uri,
+  }) : super(type: DiacEventType.dismissed, message: message);
 
   @override
   final DiacMessageAction action;
@@ -45,12 +40,12 @@ class DiacEventTriggerCustom extends DiacEvent implements DiacEventWithAction {
 
 class DiacEventDismissed extends DiacEvent implements DiacEventWithAction {
   DiacEventDismissed({
-    @required DiacMessage message,
+    required DiacMessage message,
     this.action,
   }) : super(type: DiacEventType.dismissed, message: message);
 
   @override
-  final DiacMessageAction action;
+  final DiacMessageAction? action;
 
   @override
   String toString() {

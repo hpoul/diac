@@ -4,7 +4,7 @@ version: 0.1.0
 homepage: https://github.com/hpoul/diac
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -28,6 +28,7 @@ dependencies:
   url_launcher: ^6.0.3
   # (depends on path_provider)
   simple_json_persistence: ^2.0.0-nullsafety.4
+  collection: ^1.15.0-nullsafety.4
 
 dev_dependencies:
   flutter_test:

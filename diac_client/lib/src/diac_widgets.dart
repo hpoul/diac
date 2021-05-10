@@ -14,11 +14,10 @@ final _logger = Logger('diac.diac_widgets');
 /// [SizedBox].
 class DiacMaterialBanner extends StatefulWidget {
   const DiacMaterialBanner({
-    Key key,
-    @required this.diac,
+    Key? key,
+    required this.diac,
     this.label = 'banner',
-  })  : assert(diac != null),
-        super(key: key);
+  }) : super(key: key);
 
   final DiacBloc diac;
   final String label;
@@ -40,7 +39,7 @@ class _DiacMaterialBannerState extends State<DiacMaterialBanner> {
         if (!snapshot.hasData) {
           return const SizedBox();
         }
-        final message = snapshot.data;
+        final message = snapshot.data!;
         final msg = message.message;
 
         widget.diac.publishEvent(

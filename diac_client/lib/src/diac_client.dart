@@ -16,14 +16,11 @@ final _logger = Logger('diac.diac_client');
 
 class DiacPackageInfo {
   const DiacPackageInfo({
-    @required this.appName,
-    @required this.packageName,
-    @required this.version,
-    @required this.buildNumber,
-  })  : assert(appName != null),
-        assert(packageName != null),
-        assert(version != null),
-        assert(buildNumber != null);
+    required this.appName,
+    required this.packageName,
+    required this.version,
+    required this.buildNumber,
+  });
 
   DiacPackageInfo.fromPackageInfo(PackageInfo pi)
       : this(
@@ -44,18 +41,14 @@ class DiacOpts {
   /// [initialConfig]: initial config used before first http request,
   /// or if config fetching is disabled.
   DiacOpts({
-    @required this.endpointUrl,
-    DiacConfig initialConfig,
+    required this.endpointUrl,
+    DiacConfig? initialConfig,
     this.disableConfigFetch = false,
     this.refetchInterval = const Duration(hours: 1),
     this.refetchIntervalCold = const Duration(hours: 1),
     this.httpClient = createClient,
     this.packageInfo,
-  })  : assert(endpointUrl != null),
-        assert(disableConfigFetch != null),
-        assert(refetchInterval != null),
-        assert(httpClient != null),
-        assert(!endpointUrl.endsWith('/')),
+  })  : assert(!endpointUrl.endsWith('/')),
         initialConfig = initialConfig ??
             DiacConfig(
               updatedAt: DateTime.fromMicrosecondsSinceEpoch(0).toUtc(),
@@ -81,7 +74,7 @@ class DiacOpts {
 
   /// PackageInfo used to identify the current app/version.
   /// If not defined flutter plugin `package_info` will be used.
-  final Future<DiacPackageInfo> Function() packageInfo;
+  final Future<DiacPackageInfo> Function()? packageInfo;
 
   final Client Function() httpClient;
 
@@ -89,7 +82,7 @@ class DiacOpts {
 
   Future<DiacPackageInfo> getPackageInfo() async {
     if (packageInfo != null) {
-      return await packageInfo();
+      return await packageInfo!();
     }
     if (kIsWeb) {
       return const DiacPackageInfo(
@@ -107,24 +100,23 @@ String _operatingSystem() => kIsWeb ? 'web' : Platform.operatingSystem;
 
 class DiacApi {
   DiacApi({
-    @required this.opts,
-    @required this.packageInfo,
+    required this.opts,
+    required this.packageInfo,
     this.headers,
-  })  : assert(opts != null),
-        assert(packageInfo != null);
+  });
 
   final DiacOpts opts;
   final DiacPackageInfo packageInfo;
-  final Map<String, String> headers;
+  final Map<String, String?>? headers;
 
-  Client _client;
-  Uri _endpointUri;
+  Client? _client;
+  Uri? _endpointUri;
 
   Future<Uri> _uri(List<String> path,
-      {Map<String, String> queryParameters}) async {
+      {Map<String, String>? queryParameters}) async {
     _endpointUri ??= Uri.parse(opts.endpointUrl);
-    return _endpointUri.replace(
-        pathSegments: _endpointUri.pathSegments + path,
+    return _endpointUri!.replace(
+        pathSegments: _endpointUri!.pathSegments + path,
         queryParameters: queryParameters);
   }
 
@@ -141,15 +133,15 @@ class DiacApi {
         '@${packageInfo.version}+${packageInfo.buildNumber})';
   }
 
-  Future<DiacConfig> fetchConfig() async {
+  Future<DiacConfig?> fetchConfig() async {
     final uri = await _uri(['messages.json'],
         queryParameters: _toQueryParameters(packageInfo));
     try {
       _client ??= opts.httpClient();
       _logger.finest('loading $uri with $_client');
-      final response = await _client.post(uri, headers: {
+      final response = await _client!.post(uri, headers: {
         'User-Agent': _toUserAgent(packageInfo),
-        ...?headers,
+        ...?headers as Map<String, String>?,
       });
       final type = response.statusCode ~/ 100;
       final body = utf8.decode(response.bodyBytes);
@@ -172,8 +164,8 @@ class DiacApi {
 }
 
 class DiacClient with StreamSubscriberBase {
-  DiacClient({this.opts})
-      : store = SimpleJsonPersistence.getForTypeSync(
+  DiacClient({required this.opts})
+      : store = SimpleJsonPersistence.getForTypeWithDefault(
           (data) => DiacData.fromJson(data),
           defaultCreator: () => DiacData(
             deviceId: const Uuid().v4(),
@@ -189,7 +181,7 @@ class DiacClient with StreamSubscriberBase {
       final interval =
           coldStart ? opts.refetchIntervalCold : opts.refetchInterval;
       coldStart = false;
-      if (event.lastConfig == null || event.lastConfigFetchedAt == null) {
+      if (event.lastConfig == null) {
         _logger.fine('Never fetched config before, reloading');
         await reloadConfigFromServer();
       } else if (event.lastConfigFetchedAt.difference(clock.now()).abs() >
@@ -197,21 +189,21 @@ class DiacClient with StreamSubscriberBase {
         coldStart = false;
         _logger.fine('config fetched > ${opts.refetchInterval} ago. reload.');
         await reloadConfigFromServer();
-      } else if (opts.initialConfig != null &&
-          opts.initialConfig.updatedAt.isAfter(event.lastConfig.updatedAt)) {
+      } else if (opts.initialConfig.updatedAt
+          .isAfter(event.lastConfig!.updatedAt)) {
         await _updateConfig(opts.initialConfig);
       }
     }));
   }
 
   @visibleForTesting
-  DiacApi api;
+  DiacApi? api;
 
   DiacOpts opts;
 
-  final SimpleJsonPersistence<DiacData> store;
+  final SimpleJsonPersistenceWithDefault<DiacData> store;
 
-  Future<DiacConfig> _fetchConfig() async {
+  Future<DiacConfig?> _fetchConfig() async {
     if (opts.disableConfigFetch) {
       _logger.finer('iac message fetching disabled.');
       return opts.initialConfig;
@@ -224,10 +216,10 @@ class DiacClient with StreamSubscriberBase {
         'X-Device': data.deviceId,
       },
     );
-    return await api.fetchConfig();
+    return await api!.fetchConfig();
   }
 
-  Future<void> _reloadConfigFromServerFuture;
+  Future<void>? _reloadConfigFromServerFuture;
 
   Future<void> reloadConfigFromServer() {
     return _reloadConfigFromServerFuture ??= _reloadConfigFromServerNow()
@@ -251,7 +243,7 @@ class DiacClient with StreamSubscriberBase {
   }
 
   Future<void> _updateConfig(DiacConfig config) async {
-    await store.update((data) => data.copyWith(
+    await store.update((data) => data!.copyWith(
           deviceId: data.deviceId ?? const Uuid().v4(),
           lastConfig: config,
           lastConfigFetchedAt: clock.now().toUtc(),

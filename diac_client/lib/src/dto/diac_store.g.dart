@@ -8,14 +8,14 @@ part of 'diac_store.dart';
 
 _$_DiacData _$_$_DiacDataFromJson(Map<String, dynamic> json) {
   return _$_DiacData(
-    deviceId: json['deviceId'] as String,
+    deviceId: json['deviceId'] as String?,
     firstLaunch: json['firstLaunch'] == null
         ? null
         : DateTime.parse(json['firstLaunch'] as String),
-    seen: (json['seen'] as List)
-        ?.map((e) =>
+    (seen: (json['seen'] as List?)
+        ?.map((dynamic e) =>
             e == null ? null : DiacHistory.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        ?.toList())!,
     lastConfigFetchedAt: json['lastConfigFetchedAt'] == null
         ? null
         : DateTime.parse(json['lastConfigFetchedAt'] as String),
@@ -41,7 +41,7 @@ _$_DiacHistory _$_$_DiacHistoryFromJson(Map<String, dynamic> json) {
     closedAt: json['closedAt'] == null
         ? null
         : DateTime.parse(json['closedAt'] as String),
-    action: json['action'] as String,
+    action: json['action'] as String?,
   );
 }
 
