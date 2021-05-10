@@ -102,7 +102,7 @@ class _MyAppState extends State<MyApp> with StreamSubscriberMixin {
               child: Text('If there are messages, you see them above.'),
             ),
             const SizedBox(height: 64),
-            RaisedButton(
+            ElevatedButton(
               child: const Text('Reset'),
               onPressed: () {
                 diac.clear();

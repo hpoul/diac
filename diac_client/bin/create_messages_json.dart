@@ -4,7 +4,7 @@ import 'package:diac_client/diac_tool.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> main() async {
-  final uuid = Uuid();
+  const uuid = Uuid();
   await DiacTool.instance.syncMessageConfig(
     File('messages.json'),
     [

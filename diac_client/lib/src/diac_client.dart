@@ -176,7 +176,7 @@ class DiacClient with StreamSubscriberBase {
       : store = SimpleJsonPersistence.getForTypeSync(
           (data) => DiacData.fromJson(data),
           defaultCreator: () => DiacData(
-            deviceId: Uuid().v4(),
+            deviceId: const Uuid().v4(),
             firstLaunch: clock.now().toUtc(),
             seen: [],
             lastConfig: opts.initialConfig,
@@ -252,7 +252,7 @@ class DiacClient with StreamSubscriberBase {
 
   Future<void> _updateConfig(DiacConfig config) async {
     await store.update((data) => data.copyWith(
-          deviceId: data.deviceId ?? Uuid().v4(),
+          deviceId: data.deviceId ?? const Uuid().v4(),
           lastConfig: config,
           lastConfigFetchedAt: clock.now().toUtc(),
         ));

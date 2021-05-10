@@ -55,12 +55,12 @@ class _DiacMaterialBannerState extends State<DiacMaterialBanner> {
             content: Text(msg.body),
             actions: actions
                 .map(
-                  (action) => FlatButton(
-                    child: Text(action.label),
+                  (action) => ElevatedButton(
                     onPressed: () async {
                       await widget.diac.triggerMessageAction(
                           message: message, action: action);
                     },
+                    child: Text(action.label),
                   ),
                 )
                 .toList(),

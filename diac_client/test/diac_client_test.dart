@@ -76,7 +76,7 @@ void main() {
             updatedAt: clock.now().toUtc(),
             messages: [
               DiacMessage(
-                uuid: Uuid().v4(),
+                uuid: const Uuid().v4(),
                 body: 'msg1',
                 key: 'msg1',
                 actions: [],
@@ -144,7 +144,7 @@ void main() {
             updatedAt: clock.now().toUtc(),
             messages: [
               DiacMessage(
-                uuid: Uuid().v4(),
+                uuid: const Uuid().v4(),
                 body: 'msg1',
                 key: 'msg1',
                 actions: [
