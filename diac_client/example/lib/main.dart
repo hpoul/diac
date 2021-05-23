@@ -21,7 +21,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with StreamSubscriberMixin {
-  DiacBloc diac;
+  late DiacBloc diac;
 
   @override
   void initState() {

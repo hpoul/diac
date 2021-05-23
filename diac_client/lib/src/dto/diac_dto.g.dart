@@ -8,19 +8,16 @@ part of 'diac_dto.dart';
 
 _$_DiacConfig _$_$_DiacConfigFromJson(Map<String, dynamic> json) {
   return _$_DiacConfig(
-    updatedAt: json['updatedAt'] == null
-        ? null
-        : DateTime.parse(json['updatedAt'] as String),
-    (messages: (json['messages'] as List?)
-        ?.map((dynamic e) =>
-            e == null ? null : DiacMessage.fromJson(e as Map<String, dynamic>))
-        ?.toList())!,
+    updatedAt: DateTime.parse(json['updatedAt'] as String),
+    messages: (json['messages'] as List<dynamic>)
+        .map((e) => DiacMessage.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 }
 
 Map<String, dynamic> _$_$_DiacConfigToJson(_$_DiacConfig instance) =>
     <String, dynamic>{
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'messages': instance.messages,
     };
 
@@ -36,11 +33,9 @@ _$_DiacMessage _$_$_DiacMessageFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['dateEnd'] as String),
     expression: json['expression'] as String?,
-    (actions: (json['actions'] as List?)
-        ?.map((dynamic e) => e == null
-            ? null
-            : DiacMessageAction.fromJson(e as Map<String, dynamic>))
-        ?.toList())!,
+    actions: (json['actions'] as List<dynamic>)
+        .map((e) => DiacMessageAction.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 }
 

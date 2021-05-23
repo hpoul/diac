@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
 part of 'diac_store.dart';
 
@@ -8,10 +8,15 @@ part of 'diac_store.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
 DiacData _$DiacDataFromJson(Map<String, dynamic> json) {
   return _DiacData.fromJson(json);
 }
 
+/// @nodoc
 class _$DiacDataTearOff {
   const _$DiacDataTearOff();
 
@@ -29,35 +34,47 @@ class _$DiacDataTearOff {
       lastConfig: lastConfig,
     );
   }
+
+  DiacData fromJson(Map<String, Object> json) {
+    return DiacData.fromJson(json);
+  }
 }
 
-// ignore: unused_element
+/// @nodoc
 const $DiacData = _$DiacDataTearOff();
 
+/// @nodoc
 mixin _$DiacData {
-  String? get deviceId;
-  DateTime get firstLaunch;
-  List<DiacHistory> get seen;
-  DateTime get lastConfigFetchedAt;
-  DiacConfig? get lastConfig;
+  /// Once everything is migrated, make this a required field.
+  /// (Uuid to uniquely identify this device).
+/*@required*/
+  String? get deviceId => throw _privateConstructorUsedError;
+  DateTime get firstLaunch => throw _privateConstructorUsedError;
+  List<DiacHistory> get seen => throw _privateConstructorUsedError;
+  DateTime get lastConfigFetchedAt => throw _privateConstructorUsedError;
+  DiacConfig? get lastConfig => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson();
-  $DiacDataCopyWith<DiacData> get copyWith;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $DiacDataCopyWith<DiacData> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
+/// @nodoc
 abstract class $DiacDataCopyWith<$Res> {
   factory $DiacDataCopyWith(DiacData value, $Res Function(DiacData) then) =
       _$DiacDataCopyWithImpl<$Res>;
   $Res call(
       {String? deviceId,
-      DateTime? firstLaunch,
-      List<DiacHistory>? seen,
-      DateTime? lastConfigFetchedAt,
+      DateTime firstLaunch,
+      List<DiacHistory> seen,
+      DateTime lastConfigFetchedAt,
       DiacConfig? lastConfig});
 
   $DiacConfigCopyWith<$Res>? get lastConfig;
 }
 
+/// @nodoc
 class _$DiacDataCopyWithImpl<$Res> implements $DiacDataCopyWith<$Res> {
   _$DiacDataCopyWithImpl(this._value, this._then);
 
@@ -74,16 +91,26 @@ class _$DiacDataCopyWithImpl<$Res> implements $DiacDataCopyWith<$Res> {
     Object? lastConfig = freezed,
   }) {
     return _then(_value.copyWith(
-      deviceId: deviceId == freezed ? _value.deviceId : deviceId as String?,
+      deviceId: deviceId == freezed
+          ? _value.deviceId
+          : deviceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       firstLaunch: firstLaunch == freezed
           ? _value.firstLaunch
-          : firstLaunch as DateTime?,
-      seen: seen == freezed ? _value.seen : seen as List<DiacHistory>?,
+          : firstLaunch // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      seen: seen == freezed
+          ? _value.seen
+          : seen // ignore: cast_nullable_to_non_nullable
+              as List<DiacHistory>,
       lastConfigFetchedAt: lastConfigFetchedAt == freezed
           ? _value.lastConfigFetchedAt
-          : lastConfigFetchedAt as DateTime?,
-      lastConfig:
-          lastConfig == freezed ? _value.lastConfig : lastConfig as DiacConfig?,
+          : lastConfigFetchedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      lastConfig: lastConfig == freezed
+          ? _value.lastConfig
+          : lastConfig // ignore: cast_nullable_to_non_nullable
+              as DiacConfig?,
     ));
   }
 
@@ -92,27 +119,30 @@ class _$DiacDataCopyWithImpl<$Res> implements $DiacDataCopyWith<$Res> {
     if (_value.lastConfig == null) {
       return null;
     }
-    return $DiacConfigCopyWith<$Res>(_value.lastConfig, (value) {
+
+    return $DiacConfigCopyWith<$Res>(_value.lastConfig!, (value) {
       return _then(_value.copyWith(lastConfig: value));
     });
   }
 }
 
+/// @nodoc
 abstract class _$DiacDataCopyWith<$Res> implements $DiacDataCopyWith<$Res> {
   factory _$DiacDataCopyWith(_DiacData value, $Res Function(_DiacData) then) =
       __$DiacDataCopyWithImpl<$Res>;
   @override
   $Res call(
       {String? deviceId,
-      DateTime? firstLaunch,
-      List<DiacHistory>? seen,
-      DateTime? lastConfigFetchedAt,
+      DateTime firstLaunch,
+      List<DiacHistory> seen,
+      DateTime lastConfigFetchedAt,
       DiacConfig? lastConfig});
 
   @override
   $DiacConfigCopyWith<$Res>? get lastConfig;
 }
 
+/// @nodoc
 class __$DiacDataCopyWithImpl<$Res> extends _$DiacDataCopyWithImpl<$Res>
     implements _$DiacDataCopyWith<$Res> {
   __$DiacDataCopyWithImpl(_DiacData _value, $Res Function(_DiacData) _then)
@@ -130,20 +160,31 @@ class __$DiacDataCopyWithImpl<$Res> extends _$DiacDataCopyWithImpl<$Res>
     Object? lastConfig = freezed,
   }) {
     return _then(_DiacData(
-      deviceId: deviceId == freezed ? _value.deviceId : deviceId as String?,
+      deviceId: deviceId == freezed
+          ? _value.deviceId
+          : deviceId // ignore: cast_nullable_to_non_nullable
+              as String?,
       firstLaunch: firstLaunch == freezed
           ? _value.firstLaunch
-          : (firstLaunch as DateTime?)!,
-      seen: seen == freezed ? _value.seen : (seen as List<DiacHistory>?)!,
+          : firstLaunch // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      seen: seen == freezed
+          ? _value.seen
+          : seen // ignore: cast_nullable_to_non_nullable
+              as List<DiacHistory>,
       lastConfigFetchedAt: lastConfigFetchedAt == freezed
           ? _value.lastConfigFetchedAt
-          : (lastConfigFetchedAt as DateTime?)!,
-      lastConfig:
-          lastConfig == freezed ? _value.lastConfig : lastConfig as DiacConfig?,
+          : lastConfigFetchedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      lastConfig: lastConfig == freezed
+          ? _value.lastConfig
+          : lastConfig // ignore: cast_nullable_to_non_nullable
+              as DiacConfig?,
     ));
   }
 }
 
+/// @nodoc
 @JsonSerializable()
 class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
   const _$_DiacData(
@@ -151,15 +192,16 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
       required this.firstLaunch,
       required this.seen,
       required this.lastConfigFetchedAt,
-      this.lastConfig})
-      : assert(firstLaunch != null),
-        assert(seen != null),
-        assert(lastConfigFetchedAt != null);
+      this.lastConfig});
 
   factory _$_DiacData.fromJson(Map<String, dynamic> json) =>
       _$_$_DiacDataFromJson(json);
 
   @override
+
+  /// Once everything is migrated, make this a required field.
+  /// (Uuid to uniquely identify this device).
+/*@required*/
   final String? deviceId;
   @override
   final DateTime firstLaunch;
@@ -216,6 +258,7 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
       const DeepCollectionEquality().hash(lastConfigFetchedAt) ^
       const DeepCollectionEquality().hash(lastConfig);
 
+  @JsonKey(ignore: true)
   @override
   _$DiacDataCopyWith<_DiacData> get copyWith =>
       __$DiacDataCopyWithImpl<_DiacData>(this, _$identity);
@@ -237,23 +280,30 @@ abstract class _DiacData implements DiacData {
   factory _DiacData.fromJson(Map<String, dynamic> json) = _$_DiacData.fromJson;
 
   @override
-  String? get deviceId;
+
+  /// Once everything is migrated, make this a required field.
+  /// (Uuid to uniquely identify this device).
+/*@required*/
+  String? get deviceId => throw _privateConstructorUsedError;
   @override
-  DateTime get firstLaunch;
+  DateTime get firstLaunch => throw _privateConstructorUsedError;
   @override
-  List<DiacHistory> get seen;
+  List<DiacHistory> get seen => throw _privateConstructorUsedError;
   @override
-  DateTime get lastConfigFetchedAt;
+  DateTime get lastConfigFetchedAt => throw _privateConstructorUsedError;
   @override
-  DiacConfig? get lastConfig;
+  DiacConfig? get lastConfig => throw _privateConstructorUsedError;
   @override
-  _$DiacDataCopyWith<_DiacData> get copyWith;
+  @JsonKey(ignore: true)
+  _$DiacDataCopyWith<_DiacData> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 DiacHistory _$DiacHistoryFromJson(Map<String, dynamic> json) {
   return _DiacHistory.fromJson(json);
 }
 
+/// @nodoc
 class _$DiacHistoryTearOff {
   const _$DiacHistoryTearOff();
 
@@ -269,34 +319,45 @@ class _$DiacHistoryTearOff {
       action: action,
     );
   }
+
+  DiacHistory fromJson(Map<String, Object> json) {
+    return DiacHistory.fromJson(json);
+  }
 }
 
-// ignore: unused_element
+/// @nodoc
 const $DiacHistory = _$DiacHistoryTearOff();
 
+/// @nodoc
 mixin _$DiacHistory {
   @JsonKey(name: 'id')
-  String get messageUuid;
+  String get messageUuid => throw _privateConstructorUsedError;
   @JsonKey(name: 'key')
-  String get messageKey;
-  DateTime? get closedAt;
-  String? get action;
+  String get messageKey => throw _privateConstructorUsedError;
+  DateTime? get closedAt => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson();
-  $DiacHistoryCopyWith<DiacHistory> get copyWith;
+  /// tapped action of that message.
+  String? get action => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $DiacHistoryCopyWith<DiacHistory> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
+/// @nodoc
 abstract class $DiacHistoryCopyWith<$Res> {
   factory $DiacHistoryCopyWith(
           DiacHistory value, $Res Function(DiacHistory) then) =
       _$DiacHistoryCopyWithImpl<$Res>;
   $Res call(
-      {@JsonKey(name: 'id') String? messageUuid,
-      @JsonKey(name: 'key') String? messageKey,
+      {@JsonKey(name: 'id') String messageUuid,
+      @JsonKey(name: 'key') String messageKey,
       DateTime? closedAt,
       String? action});
 }
 
+/// @nodoc
 class _$DiacHistoryCopyWithImpl<$Res> implements $DiacHistoryCopyWith<$Res> {
   _$DiacHistoryCopyWithImpl(this._value, this._then);
 
@@ -312,16 +373,27 @@ class _$DiacHistoryCopyWithImpl<$Res> implements $DiacHistoryCopyWith<$Res> {
     Object? action = freezed,
   }) {
     return _then(_value.copyWith(
-      messageUuid:
-          messageUuid == freezed ? _value.messageUuid : messageUuid as String?,
-      messageKey:
-          messageKey == freezed ? _value.messageKey : messageKey as String?,
-      closedAt: closedAt == freezed ? _value.closedAt : closedAt as DateTime?,
-      action: action == freezed ? _value.action : action as String?,
+      messageUuid: messageUuid == freezed
+          ? _value.messageUuid
+          : messageUuid // ignore: cast_nullable_to_non_nullable
+              as String,
+      messageKey: messageKey == freezed
+          ? _value.messageKey
+          : messageKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      closedAt: closedAt == freezed
+          ? _value.closedAt
+          : closedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      action: action == freezed
+          ? _value.action
+          : action // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
 
+/// @nodoc
 abstract class _$DiacHistoryCopyWith<$Res>
     implements $DiacHistoryCopyWith<$Res> {
   factory _$DiacHistoryCopyWith(
@@ -329,12 +401,13 @@ abstract class _$DiacHistoryCopyWith<$Res>
       __$DiacHistoryCopyWithImpl<$Res>;
   @override
   $Res call(
-      {@JsonKey(name: 'id') String? messageUuid,
-      @JsonKey(name: 'key') String? messageKey,
+      {@JsonKey(name: 'id') String messageUuid,
+      @JsonKey(name: 'key') String messageKey,
       DateTime? closedAt,
       String? action});
 }
 
+/// @nodoc
 class __$DiacHistoryCopyWithImpl<$Res> extends _$DiacHistoryCopyWithImpl<$Res>
     implements _$DiacHistoryCopyWith<$Res> {
   __$DiacHistoryCopyWithImpl(
@@ -354,24 +427,32 @@ class __$DiacHistoryCopyWithImpl<$Res> extends _$DiacHistoryCopyWithImpl<$Res>
     return _then(_DiacHistory(
       messageUuid: messageUuid == freezed
           ? _value.messageUuid
-          : (messageUuid as String?)!,
-      messageKey:
-          messageKey == freezed ? _value.messageKey : (messageKey as String?)!,
-      closedAt: closedAt == freezed ? _value.closedAt : closedAt as DateTime?,
-      action: action == freezed ? _value.action : action as String?,
+          : messageUuid // ignore: cast_nullable_to_non_nullable
+              as String,
+      messageKey: messageKey == freezed
+          ? _value.messageKey
+          : messageKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      closedAt: closedAt == freezed
+          ? _value.closedAt
+          : closedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      action: action == freezed
+          ? _value.action
+          : action // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
 
+/// @nodoc
 @JsonSerializable()
 class _$_DiacHistory with DiagnosticableTreeMixin implements _DiacHistory {
   const _$_DiacHistory(
       {@JsonKey(name: 'id') required this.messageUuid,
       @JsonKey(name: 'key') required this.messageKey,
       this.closedAt,
-      this.action})
-      : assert(messageUuid != null),
-        assert(messageKey != null);
+      this.action});
 
   factory _$_DiacHistory.fromJson(Map<String, dynamic> json) =>
       _$_$_DiacHistoryFromJson(json);
@@ -385,6 +466,8 @@ class _$_DiacHistory with DiagnosticableTreeMixin implements _DiacHistory {
   @override
   final DateTime? closedAt;
   @override
+
+  /// tapped action of that message.
   final String? action;
 
   @override
@@ -428,6 +511,7 @@ class _$_DiacHistory with DiagnosticableTreeMixin implements _DiacHistory {
       const DeepCollectionEquality().hash(closedAt) ^
       const DeepCollectionEquality().hash(action);
 
+  @JsonKey(ignore: true)
   @override
   _$DiacHistoryCopyWith<_DiacHistory> get copyWith =>
       __$DiacHistoryCopyWithImpl<_DiacHistory>(this, _$identity);
@@ -450,14 +534,18 @@ abstract class _DiacHistory implements DiacHistory {
 
   @override
   @JsonKey(name: 'id')
-  String get messageUuid;
+  String get messageUuid => throw _privateConstructorUsedError;
   @override
   @JsonKey(name: 'key')
-  String get messageKey;
+  String get messageKey => throw _privateConstructorUsedError;
   @override
-  DateTime? get closedAt;
+  DateTime? get closedAt => throw _privateConstructorUsedError;
   @override
-  String? get action;
+
+  /// tapped action of that message.
+  String? get action => throw _privateConstructorUsedError;
   @override
-  _$DiacHistoryCopyWith<_DiacHistory> get copyWith;
+  @JsonKey(ignore: true)
+  _$DiacHistoryCopyWith<_DiacHistory> get copyWith =>
+      throw _privateConstructorUsedError;
 }

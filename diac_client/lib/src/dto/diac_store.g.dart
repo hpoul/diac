@@ -9,16 +9,11 @@ part of 'diac_store.dart';
 _$_DiacData _$_$_DiacDataFromJson(Map<String, dynamic> json) {
   return _$_DiacData(
     deviceId: json['deviceId'] as String?,
-    firstLaunch: json['firstLaunch'] == null
-        ? null
-        : DateTime.parse(json['firstLaunch'] as String),
-    (seen: (json['seen'] as List?)
-        ?.map((dynamic e) =>
-            e == null ? null : DiacHistory.fromJson(e as Map<String, dynamic>))
-        ?.toList())!,
-    lastConfigFetchedAt: json['lastConfigFetchedAt'] == null
-        ? null
-        : DateTime.parse(json['lastConfigFetchedAt'] as String),
+    firstLaunch: DateTime.parse(json['firstLaunch'] as String),
+    seen: (json['seen'] as List<dynamic>)
+        .map((e) => DiacHistory.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    lastConfigFetchedAt: DateTime.parse(json['lastConfigFetchedAt'] as String),
     lastConfig: json['lastConfig'] == null
         ? null
         : DiacConfig.fromJson(json['lastConfig'] as Map<String, dynamic>),
@@ -28,9 +23,9 @@ _$_DiacData _$_$_DiacDataFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$_$_DiacDataToJson(_$_DiacData instance) =>
     <String, dynamic>{
       'deviceId': instance.deviceId,
-      'firstLaunch': instance.firstLaunch?.toIso8601String(),
+      'firstLaunch': instance.firstLaunch.toIso8601String(),
       'seen': instance.seen,
-      'lastConfigFetchedAt': instance.lastConfigFetchedAt?.toIso8601String(),
+      'lastConfigFetchedAt': instance.lastConfigFetchedAt.toIso8601String(),
       'lastConfig': instance.lastConfig,
     };
 
