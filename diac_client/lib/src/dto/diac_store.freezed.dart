@@ -21,7 +21,7 @@ class _$DiacDataTearOff {
   const _$DiacDataTearOff();
 
   _DiacData call(
-      {String? deviceId,
+      {required String deviceId,
       required DateTime firstLaunch,
       required List<DiacHistory> seen,
       required DateTime lastConfigFetchedAt,
@@ -47,8 +47,7 @@ const $DiacData = _$DiacDataTearOff();
 mixin _$DiacData {
   /// Once everything is migrated, make this a required field.
   /// (Uuid to uniquely identify this device).
-/*@required*/
-  String? get deviceId => throw _privateConstructorUsedError;
+  String get deviceId => throw _privateConstructorUsedError;
   DateTime get firstLaunch => throw _privateConstructorUsedError;
   List<DiacHistory> get seen => throw _privateConstructorUsedError;
   DateTime get lastConfigFetchedAt => throw _privateConstructorUsedError;
@@ -65,7 +64,7 @@ abstract class $DiacDataCopyWith<$Res> {
   factory $DiacDataCopyWith(DiacData value, $Res Function(DiacData) then) =
       _$DiacDataCopyWithImpl<$Res>;
   $Res call(
-      {String? deviceId,
+      {String deviceId,
       DateTime firstLaunch,
       List<DiacHistory> seen,
       DateTime lastConfigFetchedAt,
@@ -94,7 +93,7 @@ class _$DiacDataCopyWithImpl<$Res> implements $DiacDataCopyWith<$Res> {
       deviceId: deviceId == freezed
           ? _value.deviceId
           : deviceId // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       firstLaunch: firstLaunch == freezed
           ? _value.firstLaunch
           : firstLaunch // ignore: cast_nullable_to_non_nullable
@@ -132,7 +131,7 @@ abstract class _$DiacDataCopyWith<$Res> implements $DiacDataCopyWith<$Res> {
       __$DiacDataCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? deviceId,
+      {String deviceId,
       DateTime firstLaunch,
       List<DiacHistory> seen,
       DateTime lastConfigFetchedAt,
@@ -163,7 +162,7 @@ class __$DiacDataCopyWithImpl<$Res> extends _$DiacDataCopyWithImpl<$Res>
       deviceId: deviceId == freezed
           ? _value.deviceId
           : deviceId // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       firstLaunch: firstLaunch == freezed
           ? _value.firstLaunch
           : firstLaunch // ignore: cast_nullable_to_non_nullable
@@ -188,7 +187,7 @@ class __$DiacDataCopyWithImpl<$Res> extends _$DiacDataCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
   const _$_DiacData(
-      {this.deviceId,
+      {required this.deviceId,
       required this.firstLaunch,
       required this.seen,
       required this.lastConfigFetchedAt,
@@ -201,8 +200,7 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
 
   /// Once everything is migrated, make this a required field.
   /// (Uuid to uniquely identify this device).
-/*@required*/
-  final String? deviceId;
+  final String deviceId;
   @override
   final DateTime firstLaunch;
   @override
@@ -271,7 +269,7 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
 
 abstract class _DiacData implements DiacData {
   const factory _DiacData(
-      {String? deviceId,
+      {required String deviceId,
       required DateTime firstLaunch,
       required List<DiacHistory> seen,
       required DateTime lastConfigFetchedAt,
@@ -283,8 +281,7 @@ abstract class _DiacData implements DiacData {
 
   /// Once everything is migrated, make this a required field.
   /// (Uuid to uniquely identify this device).
-/*@required*/
-  String? get deviceId => throw _privateConstructorUsedError;
+  String get deviceId => throw _privateConstructorUsedError;
   @override
   DateTime get firstLaunch => throw _privateConstructorUsedError;
   @override

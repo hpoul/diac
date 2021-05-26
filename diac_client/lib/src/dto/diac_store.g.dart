@@ -8,7 +8,7 @@ part of 'diac_store.dart';
 
 _$_DiacData _$_$_DiacDataFromJson(Map<String, dynamic> json) {
   return _$_DiacData(
-    deviceId: json['deviceId'] as String?,
+    deviceId: json['deviceId'] as String,
     firstLaunch: DateTime.parse(json['firstLaunch'] as String),
     seen: (json['seen'] as List<dynamic>)
         .map((e) => DiacHistory.fromJson(e as Map<String, dynamic>))

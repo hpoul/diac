@@ -12,7 +12,7 @@ abstract class DiacData with _$DiacData implements HasToJson {
   const factory DiacData({
     /// Once everything is migrated, make this a required field.
     /// (Uuid to uniquely identify this device).
-    /*@required*/ String? deviceId,
+    required String deviceId,
     required DateTime firstLaunch,
     required List<DiacHistory> seen,
     required DateTime lastConfigFetchedAt,

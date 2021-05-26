@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> with StreamSubscriberMixin {
           updatedAt: clock.now().toUtc(),
           messages: [
             DiacMessage(
-              uuid: Uuid().v4(),
+              uuid: const Uuid().v4(),
               body: 'How do you like me?',
               key: 'likeme',
               actions: [
@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> with StreamSubscriberMixin {
               ],
             ),
             DiacMessage(
-              uuid: Uuid().v4(),
+              uuid: const Uuid().v4(),
               body: 'That is nice to hear 😍️',
               key: 'message2',
               expression: 'action("likeme") == "great"',
@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> with StreamSubscriberMixin {
               ],
             ),
             DiacMessage(
-              uuid: Uuid().v4(),
+              uuid: const Uuid().v4(),
               body: 'Too bad :-( How can we do better?️',
               key: 'message2',
               expression: 'action("likeme") == "bad"',
@@ -103,10 +103,10 @@ class _MyAppState extends State<MyApp> with StreamSubscriberMixin {
             ),
             const SizedBox(height: 64),
             ElevatedButton(
-              child: const Text('Reset'),
               onPressed: () {
                 diac.clear();
               },
+              child: const Text('Reset'),
             ),
           ],
         ),

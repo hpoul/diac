@@ -107,7 +107,7 @@ class DiacApi {
 
   final DiacOpts opts;
   final DiacPackageInfo packageInfo;
-  final Map<String, String?>? headers;
+  final Map<String, String>? headers;
 
   Client? _client;
   Uri? _endpointUri;
@@ -141,7 +141,7 @@ class DiacApi {
       _logger.finest('loading $uri with $_client');
       final response = await _client!.post(uri, headers: {
         'User-Agent': _toUserAgent(packageInfo),
-        ...?headers as Map<String, String>?,
+        ...?headers,
       });
       final type = response.statusCode ~/ 100;
       final body = utf8.decode(response.bodyBytes);
@@ -244,7 +244,7 @@ class DiacClient with StreamSubscriberBase {
 
   Future<void> _updateConfig(DiacConfig config) async {
     await store.update((data) => data!.copyWith(
-          deviceId: data.deviceId ?? const Uuid().v4(),
+          deviceId: data.deviceId,
           lastConfig: config,
           lastConfigFetchedAt: clock.now().toUtc(),
         ));
