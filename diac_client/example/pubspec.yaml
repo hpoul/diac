@@ -34,6 +34,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+dependency_overrides:
+  # https://github.com/appsup-dart/expressions/pull/17
+  # expressions 0.2.2 requires 0.26 🤦️
+  rxdart: ^0.27.0
+  expressions: ^0.2.2
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
