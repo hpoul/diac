@@ -52,4 +52,4 @@ Map<String, dynamic> _$_$_DiacHistoryToJson(_$_DiacHistory instance) =>
 // StaticTextGenerator
 // **************************************************************************
 
-// ignore_for_file: implicit_dynamic_parameter,strong_mode_implicit_dynamic_parameter,strong_mode_implicit_dynamic_variable,non_constant_identifier_names,unused_element
+// modify build.yaml to configure this text.

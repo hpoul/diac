@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_async_utils/flutter_async_utils.dart';
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:simple_json_persistence/simple_json_persistence.dart';
 import 'package:uuid/uuid.dart';
 
