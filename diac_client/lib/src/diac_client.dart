@@ -167,6 +167,7 @@ class DiacClient with StreamSubscriberBase {
   DiacClient({required this.opts})
       : store = SimpleJsonPersistence.getForTypeWithDefault(
           (data) => DiacData.fromJson(data),
+          name: 'DiacData',
           defaultCreator: () => DiacData(
             deviceId: const Uuid().v4(),
             firstLaunch: clock.now().toUtc(),
