@@ -27,7 +27,7 @@ dependencies:
   package_info_plus: ^1.0.3
   url_launcher: ^6.0.3
   # (depends on path_provider)
-  simple_json_persistence: ^2.0.0-nullsafety.4
+  simple_json_persistence: ^2.0.1
   collection: ^1.15.0-nullsafety.4
 
 dev_dependencies:
