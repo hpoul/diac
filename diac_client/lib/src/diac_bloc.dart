@@ -108,7 +108,7 @@ class DiacBloc with StreamSubscriberBase {
   ) async {
     try {
       final now = clock.now();
-      _logger.finest('Find next message. ${data.lastConfig!.messages}');
+      _logger.finest('Find next message.');
       final exprContext = await _createExpressionContext(data, context);
       for (final message in data.lastConfig!.messages) {
         if (seenMessages.contains(message.uuid)) {
@@ -149,7 +149,7 @@ class DiacBloc with StreamSubscriberBase {
       rethrow;
     }
 //    data.seen
-    _logger.finer('no message found.');
+    _logger.finest('no message found.');
     return null;
   }
 
