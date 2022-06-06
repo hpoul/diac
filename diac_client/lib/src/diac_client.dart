@@ -244,7 +244,7 @@ class DiacClient with StreamSubscriberBase {
   }
 
   Future<void> _updateConfig(DiacConfig config) async {
-    await store.update((data) => data!.copyWith(
+    await store.update((data) => data.copyWith(
           deviceId: data.deviceId,
           lastConfig: config,
           lastConfigFetchedAt: clock.now().toUtc(),

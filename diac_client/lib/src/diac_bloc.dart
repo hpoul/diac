@@ -56,7 +56,7 @@ class DiacBloc with StreamSubscriberBase {
       _logger.fine('handling event $event');
       if (event is DiacEventDismissed) {
         _logger.finer('setting ${event.message.uuid} as dismissed.');
-        _client.store.update((data) => data!.copyWith(seen: [
+        _client.store.update((data) => data.copyWith(seen: [
               ...data.seen,
               DiacHistory(
                 messageUuid: event.message.uuid,
@@ -264,10 +264,9 @@ class DiacBloc with StreamSubscriberBase {
       }
       publishEvent(event);
     } else {
-      if (!await launch(
-        uri.toString(),
-        forceSafariVC: false,
-        forceWebView: false,
+      if (!await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
       )) {
         _logger.warning('Unable to launch url ${event.action.url}');
       }

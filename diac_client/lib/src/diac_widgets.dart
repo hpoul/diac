@@ -2,7 +2,6 @@ import 'package:diac_client/src/diac_bloc.dart';
 import 'package:diac_client/src/diac_event.dart';
 import 'package:diac_client/src/dto/diac_dto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
 final _logger = Logger('diac.diac_widgets');
@@ -23,10 +22,10 @@ class DiacMaterialBanner extends StatefulWidget {
   final String label;
 
   @override
-  _DiacMaterialBannerState createState() => _DiacMaterialBannerState();
+  DiacMaterialBannerState createState() => DiacMaterialBannerState();
 }
 
-class _DiacMaterialBannerState extends State<DiacMaterialBanner> {
+class DiacMaterialBannerState extends State<DiacMaterialBanner> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DiacMessageDisplay>(

@@ -35,7 +35,7 @@ class DiacTool {
                       orElse: () => msg)
                   .uuid))
           .toList();
-      final DiacConfig? newConfig = config.copyWith(
+      final DiacConfig newConfig = config.copyWith(
         updatedAt: clock.now().toUtc(),
         messages: newMessages,
       );
