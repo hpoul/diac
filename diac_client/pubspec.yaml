@@ -2,6 +2,7 @@ name: diac_client
 description: Dart based In-App Communication client :-) Easily display server-configured messages.
 version: 0.1.0
 homepage: https://github.com/hpoul/diac
+publish_to: none
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -16,7 +17,10 @@ dependencies:
   logging: '>=1.0.1 <2.0.0'
   flutter_async_utils: ^1.0.0+1
   rxdart: ^0.27.4
-  expressions: ^0.2.3
+  expressions: #^0.2.3
+    git:
+      url: https://github.com/legacyofplay/expressions.git
+      ref: 84192f4b8ac7e53889d2b980df62cc1cdbf47da7
   uuid: ^3.0.6
   # for the bin/ dart file
   logging_appenders: ^1.0.0

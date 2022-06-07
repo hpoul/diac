@@ -165,9 +165,11 @@ packages:
   expressions:
     dependency: "direct main"
     description:
-      name: expressions
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "84192f4b8ac7e53889d2b980df62cc1cdbf47da7"
+      resolved-ref: "84192f4b8ac7e53889d2b980df62cc1cdbf47da7"
+      url: "https://github.com/legacyofplay/expressions.git"
+    source: git
     version: "0.2.3"
   fake_async:
     dependency: "direct dev"
@@ -435,7 +437,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.10"
+    version: "2.0.11"
   path_provider_android:
     dependency: transitive
     description:
@@ -484,7 +486,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.0"
+    version: "5.0.0"
   platform:
     dependency: transitive
     description:
