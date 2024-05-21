@@ -210,7 +210,7 @@ class _$_DiacData with DiagnosticableTreeMixin implements _DiacData {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DiacData &&
@@ -437,7 +437,7 @@ class _$_DiacHistory with DiagnosticableTreeMixin implements _DiacHistory {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DiacHistory &&

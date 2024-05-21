@@ -12,6 +12,7 @@ import 'package:logging_appenders/logging_appenders.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 // ignore: depend_on_referenced_packages
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 import 'package:uuid/uuid.dart';
@@ -46,10 +47,10 @@ void main() {
     UrlLauncherPlatform.instance = urlLauncher = MyMockLauncherPlatformMock();
   });
 
-  Future<void> _wait() async =>
+  Future<void> wait() async =>
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
-  Future<StreamSubscription<void>> _subscribe(DiacBloc diac) async {
+  Future<StreamSubscription<void>> subscribe(DiacBloc diac) async {
     return diac.messageForLabel('test').listen((event) {
       _logger.finer('Got messages $event');
     });
@@ -61,16 +62,16 @@ void main() {
         opts: DiacOpts(endpointUrl: '', disableConfigFetch: true),
       );
       {
-        final subscription = await _subscribe(diac);
-        await _wait();
+        final subscription = await subscribe(diac);
+        await wait();
         await subscription.cancel();
-        await _wait();
+        await wait();
       }
       {
-        final subscription = await _subscribe(diac);
-        await _wait();
+        final subscription = await subscribe(diac);
+        await wait();
         await subscription.cancel();
-        await _wait();
+        await wait();
       }
       diac.dispose();
     });
@@ -203,8 +204,10 @@ class TestUtil {
     final directory = await Directory.systemTemp.createTemp('flutter_tmp');
 
     // Mock out the MethodChannel for the path_provider plugin.
-    const MethodChannel('plugins.flutter.io/path_provider')
-        .setMockMethodCallHandler((MethodCall methodCall) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+            const MethodChannel('plugins.flutter.io/path_provider'),
+            (MethodCall methodCall) async {
       // If you're getting the apps documents directory, return the path to the
       // temp directory on the test environment instead.
       if (methodCall.method == 'getApplicationDocumentsDirectory') {
@@ -214,8 +217,10 @@ class TestUtil {
       return null;
     });
 
-    const MethodChannel('plugins.flutter.io/package_info')
-        .setMockMethodCallHandler((call) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+            const MethodChannel('plugins.flutter.io/package_info'),
+            (call) async {
       return {
         'appName': 'testDiac',
         'packageName': 'design.codeux.diac.test',

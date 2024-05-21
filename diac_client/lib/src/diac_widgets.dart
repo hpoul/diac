@@ -13,10 +13,10 @@ final _logger = Logger('diac.diac_widgets');
 /// [SizedBox].
 class DiacMaterialBanner extends StatefulWidget {
   const DiacMaterialBanner({
-    Key? key,
+    super.key,
     required this.diac,
     this.label = 'banner',
-  }) : super(key: key);
+  });
 
   final DiacBloc diac;
   final String label;

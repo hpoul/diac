@@ -126,7 +126,7 @@ class _$_DiacConfig implements _DiacConfig {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DiacConfig &&
@@ -367,7 +367,7 @@ class _$_DiacMessage implements _DiacMessage {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DiacMessage &&
@@ -576,7 +576,7 @@ class _$_DiacMessageAction implements _DiacMessageAction {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DiacMessageAction &&

@@ -28,10 +28,10 @@ abstract class DiacEventWithAction implements DiacEvent {
 
 class DiacEventTriggerCustom extends DiacEvent implements DiacEventWithAction {
   DiacEventTriggerCustom({
-    required DiacMessage message,
+    required super.message,
     required this.action,
     required this.uri,
-  }) : super(type: DiacEventType.dismissed, message: message);
+  }) : super(type: DiacEventType.dismissed);
 
   @override
   final DiacMessageAction action;
@@ -40,9 +40,9 @@ class DiacEventTriggerCustom extends DiacEvent implements DiacEventWithAction {
 
 class DiacEventDismissed extends DiacEvent implements DiacEventWithAction {
   DiacEventDismissed({
-    required DiacMessage message,
+    required super.message,
     this.action,
-  }) : super(type: DiacEventType.dismissed, message: message);
+  }) : super(type: DiacEventType.dismissed);
 
   @override
   final DiacMessageAction? action;
